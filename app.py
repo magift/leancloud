@@ -1,33 +1,36 @@
 # coding: utf-8
-
-from datetime import datetime
-
-from flask import Flask
-from flask import render_template
+import tornado.web
+import tornado.wsgi
 from leancloud import Engine
+from controller import *
+from mako.template import Template
+from mako.lookup import TemplateLookup
 
-from views.todos import todos_view
+mylookup = TemplateLookup(directories=['/docs'], module_directory='/tmp/mako_modules')
 
-app = Flask(__name__)
+def serve_template(templatename, **kwargs):
+    mytemplate = mylookup.get_template(templatename)
+    print(mytemplate.render(**kwargs))
 
-# 动态路由
-app.register_blueprint(todos_view, url_prefix='/todos')
+application = tornado.wsgi.WSGIApplication([
+    (r"/question/add", AddQuestionHandler),
+    (r"/question/(.*?)/", QuestionHandler),
+    (r"/question/(.*?)/option/add", AddOptionHandler),
+    (r"/review/add", AddReviewHandler),
+    (r"/static", StaticHandler),
+    (r"/", MainHandler),
+])
 
+engine = Engine(application)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+if __name__ == "__main__":
+    port = 8888
+    try:
+        from config import port as p
+        port = p
+    except:
+        pass
+        
+    application.listen(port)
+    tornado.ioloop.IOLoop.instance().start()
 
-
-@app.route('/time')
-def time():
-    return str(datetime.now())
-
-
-# LeanEngine 云函数
-engine = Engine(app)
-
-
-@engine.define
-def hello(**params):
-    return 'Hello LeanEngine!'

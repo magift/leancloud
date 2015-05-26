@@ -1,0 +1,33 @@
+<%inherit file="base.html"/>
+
+<%def name="title()">
+<%include file="widget_question_title.html" args="question=question"/>
+</%def>
+
+<%def name="content()">
+        %for option in question.options:
+                <!--a href="http://www.baidu.com/s?wd=${option.title}"><h5>${option.title}</h5></a-->
+                %if option.link:
+                    <a href="${option.link}">
+                    <h5>${option.title} »</h5>
+                    </a>
+                %else:
+                    <h5>${option.title}</h5>
+                %endif
+                %for review in option.reviews:
+                    <h5><small>${review.title}</small></h5>
+                %endfor
+
+                <!--form method="POST" action="/review/add">
+                    <div class="form-group">
+                            <input name="title"></input>
+                            <input type="submit" value="评论"></input>
+                            <input type="hidden" name="oid" value="${option.id}"></input>
+                    </div>
+                </form-->
+                <hr>
+        %endfor
+
+        <a href="/question/${question.id}/option/add"><button type="button" class="btn btn-success">+ 我要推荐</button> 
+        </a>
+</%def>

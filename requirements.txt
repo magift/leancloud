@@ -3,3 +3,5 @@ leancloud-sdk>=1.0.9
 pyopenssl
 ndg-httpsclient
 pyasn1
+tornado
+mako
