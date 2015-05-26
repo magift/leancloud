@@ -19,9 +19,10 @@ def render(templatename, **kwargs):
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
-        tester = User()
-        tester.login("test", "test")
-        return tester
+        from leancloud import User 
+        QIU_USER = User()
+        QIU_USER.login("test2", "test2")
+        return QIU_USER
 
 class MainHandler(BaseHandler):
     def get(self):

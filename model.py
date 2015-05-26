@@ -16,8 +16,8 @@ leancloud.init(leancloud_id, leancloud_key)
 
 from leancloud import Object
 from leancloud import LeanCloudError
-from leancloud import User
 from leancloud import Query
+
 
 
 class Data(Object):

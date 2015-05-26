@@ -12,6 +12,9 @@ def serve_template(templatename, **kwargs):
     mytemplate = mylookup.get_template(templatename)
     print(mytemplate.render(**kwargs))
 
+import logging
+logging.basicConfig()
+
 application = tornado.wsgi.WSGIApplication([
     (r"/question/add", AddQuestionHandler),
     (r"/question/(.*?)/", QuestionHandler),
