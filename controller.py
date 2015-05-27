@@ -29,11 +29,11 @@ class BaseHandler(tornado.web.RequestHandler):
         return QIU_USER
 
     def write_error(self, status_code, **kwargs):
+        ## no print in product env
         self.write(str(traceback.format_exc()))
 
 class MainHandler(BaseHandler):
     def get(self):
-        assert False, 123
         questions = Question.hotest()
         self.write(render('main.html', questions=questions))
 
