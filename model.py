@@ -1,19 +1,5 @@
 from datetime import datetime, timedelta
 import leancloud
-
-
-leancloud_id = 'vz3hsizfxtqmlqtzjacnwcn47klhorssukkctpk912ggj7f3'
-leancloud_key= 'm10uzdwdd9efp54v76xj944lopr5ds0dmvziecni1wxzigqv'
-
-try:
-    import config 
-    leancloud_id = config.leancloud_id
-    leancloud_key = config.leancloud_key
-except:
-    pass
-
-leancloud.init(leancloud_id, leancloud_key)
-
 from leancloud import Object
 from leancloud import LeanCloudError
 from leancloud import Query

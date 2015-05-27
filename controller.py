@@ -62,8 +62,7 @@ class AddOptionHandler(BaseHandler):
         option = Option.add(title, author, question)
         if review:
                 review = Review.add(review, author, option)
-        #self.redirect('/question/%s/' % question.id)
-        self.redirect('/')
+        self.redirect('/question/%s/' % question.id)
 
 class StaticHandler(BaseHandler):
     def get(self):

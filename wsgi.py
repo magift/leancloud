@@ -11,6 +11,12 @@ APP_ID = os.environ['LC_APP_ID']
 MASTER_KEY = os.environ['LC_APP_MASTER_KEY']
 PORT = int(os.environ['LC_APP_PORT'])
 
+try:
+    import config 
+    APP_ID = config.leancloud_id
+    MASTER_KEY = config.leancloud_key
+except:
+    pass
 
 leancloud.init(APP_ID, master_key=MASTER_KEY)
 
