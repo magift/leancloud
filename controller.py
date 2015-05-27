@@ -1,7 +1,9 @@
+from urlparse import urlparse
 from model import *
 import tornado.web
 from mako.template import Template
 from mako.lookup import TemplateLookup
+from lib import urlnorm 
 
 mylookup = TemplateLookup(
 	directories=['./templates'], 
@@ -57,9 +59,11 @@ class AddOptionHandler(BaseHandler):
         author = self.current_user
         title = self.get_argument('title').strip()
         review = self.get_argument('review').strip()
+        link = self.get_argument('link').strip()
+        link = urlnorm.norms(link)
         if not title: 
             self.redirect('/question/%s/option/add' % question.id)
-        option = Option.add(title, author, question)
+        option = Option.add(title, author, question, link)
         if review:
                 review = Review.add(review, author, option)
         self.redirect('/question/%s/' % question.id)
