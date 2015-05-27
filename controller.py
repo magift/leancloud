@@ -45,7 +45,7 @@ class AddQuestionHandler(BaseHandler):
         title = self.get_argument('title').strip()
         if not title:
             self.redirect('/question/add')
-        question = Question.add(title, self.current_user)
+        question = Question.add(title, self.get_current_user())
         #self.redirect('/question/%s/' % question.id)
         self.redirect('/')
 
@@ -62,7 +62,7 @@ class AddOptionHandler(BaseHandler):
 
     def post(self, question_id):
         question = Question.take(question_id)
-        author = self.current_user
+        author = self.get_current_user()
         title = self.get_argument('title').strip()
         review = self.get_argument('review').strip()
         link = self.get_argument('link').strip()
@@ -85,7 +85,7 @@ class AddReviewHandler(BaseHandler):
         option_id = self.get_argument('oid')
         option = Option.take(option_id)
         title = self.get_argument('title')
-        Review.add(title=title, author=self.current_user, option=option
+        Review.add(title=title, author=self.get_current_user(), option=option
 )
         self.redirect('/question/%s/' % option.question.id)
 
