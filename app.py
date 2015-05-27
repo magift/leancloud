@@ -1,7 +1,6 @@
 # coding: utf-8
 import tornado.web
 import tornado.wsgi
-from leancloud import Engine
 from controller import *
 from mako.template import Template
 from mako.lookup import TemplateLookup
@@ -15,22 +14,23 @@ def serve_template(templatename, **kwargs):
 import logging
 logging.basicConfig()
 
-application = tornado.wsgi.WSGIApplication([
+urls = [
     (r"/question/add", AddQuestionHandler),
     (r"/question/(.*?)/", QuestionHandler),
     (r"/question/(.*?)/option/add", AddOptionHandler),
     (r"/review/add", AddReviewHandler),
     (r"/static", StaticHandler),
     (r"/", MainHandler),
-])
+]
+application = tornado.wsgi.WSGIApplication(urls)
 
-engine = Engine(application)
 
 if __name__ == "__main__":
     port = 8888
     try:
-        from config import port as p
-        port = p
+        import config
+        leancloud.init(config.leancloud_id, master_key=config.leancloud_key)
+        port = config.port
     except:
         pass
         

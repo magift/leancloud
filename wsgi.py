@@ -20,6 +20,8 @@ except:
 
 leancloud.init(APP_ID, master_key=MASTER_KEY)
 
+from leancloud import Engine
+engine = Engine(application)
 application = engine
 
 
