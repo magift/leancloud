@@ -4,6 +4,8 @@ import tornado.web
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from lib import urlnorm 
+import sys
+import traceback
 
 mylookup = TemplateLookup(
 	directories=['./templates'], 
@@ -26,8 +28,12 @@ class BaseHandler(tornado.web.RequestHandler):
         QIU_USER.login("test2", "test2")
         return QIU_USER
 
+    def write_error(self, status_code, **kwargs):
+        self.write(str(traceback.format_exc()))
+
 class MainHandler(BaseHandler):
     def get(self):
+        assert False, 123
         questions = Question.hotest()
         self.write(render('main.html', questions=questions))
 
