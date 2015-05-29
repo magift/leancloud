@@ -66,6 +66,10 @@ class Option(Data):
         query.ascending('updateAt')
         return query.find()
 
+    @property
+    def review(self):
+        return self.reviews and self.reviews[0] or []
+
     @property 
     def new_review(self):
         return self.reviews and self.reviews[0] or None

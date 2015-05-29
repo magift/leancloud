@@ -5,8 +5,6 @@ import os
 import leancloud
 from wsgiref import simple_server
 
-from app import engine
-
 APP_ID = os.environ['LC_APP_ID']
 MASTER_KEY = os.environ['LC_APP_MASTER_KEY']
 PORT = int(os.environ['LC_APP_PORT'])

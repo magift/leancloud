@@ -18,6 +18,7 @@ urls = [
     (r"/question/add", AddQuestionHandler),
     (r"/question/(.*?)/", QuestionHandler),
     (r"/question/(.*?)/option/add", AddOptionHandler),
+    (r"/option/(.*?)/update", UpdateOptionHandler),
     (r"/review/add", AddReviewHandler),
     (r"/static", StaticHandler),
     (r"/", MainHandler),

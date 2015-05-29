@@ -74,11 +74,17 @@ class AddOptionHandler(BaseHandler):
                 review = Review.add(review, author, option)
         self.redirect('/question/%s/' % question.id)
 
+class UpdateOptionHandler(BaseHandler):
+    def get(self, option_id):
+        option = Option.take(option_id)
+        question = option.question
+        self.write(render('update_option.html', option=option, question=question))
+
 class StaticHandler(BaseHandler):
     def get(self):
         questions = Question.get_date_news()
-        options = Option.get_date_news()
-        self.write(render('static.html', questions=questions, options=options))
+        option = Option.get_date_news()
+        self.write(render('static.html', questions=questions, option=option))
 
 class AddReviewHandler(BaseHandler):
     def post(self):
