@@ -1,9 +1,14 @@
 # coding: utf-8
+
+from gevent import monkey
+monkey.patch_all()
+
 import tornado.web
 import tornado.wsgi
 from controller import *
 from mako.template import Template
 from mako.lookup import TemplateLookup
+
 
 mylookup = TemplateLookup(directories=['/docs'], module_directory='/tmp/mako_modules')
 

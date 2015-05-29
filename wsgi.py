@@ -1,10 +1,9 @@
 # coding: utf-8
 
+from app import application
 import os
-
 import leancloud
 from wsgiref import simple_server
-from app import application
 
 APP_ID = os.environ['LC_APP_ID']
 MASTER_KEY = os.environ['LC_APP_MASTER_KEY']
