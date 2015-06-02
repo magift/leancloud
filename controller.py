@@ -34,8 +34,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        questions = Question.hotest()
-        self.write(render('main.html', questions=questions))
+        questions, options, reviews = Question.hotest()
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):
