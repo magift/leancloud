@@ -15,10 +15,12 @@
                 </h5>
                 </a>
 
-                %if question.new_option:
-                <p><h6>${question.new_option.title}
-                    %if question.new_option.new_review:
-                        <small>${question.new_option.new_review.title}</small></h6></p>
+                <% option = options.get(question.id, '')%>
+                %if option:
+                <p><h6>${option.title}
+                      <% review = reviews.get(option.id, '') %>
+                      % if review:
+                        <small>${review.title}</small></h6></p>
                     %endif
                 %endif
                 <hr>

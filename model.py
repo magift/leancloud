@@ -35,7 +35,24 @@ class Question(Data):
     def hotest(self):
         query = Query(Question)
         query.descending('updatedAt')
-        return query.limit(50).find()
+        questions = query.limit(50).find()
+
+        #TODO sql inject
+        result = Query.do_cloud_query('select * from Option where question in (%s) order by updateAt desc' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
+        result = result.results
+        options = {}
+        for r in result:
+            if r.question not in [i.question for i in options.values()]:
+                options[r.question.id] = r
+
+        result = Query.do_cloud_query('select * from Review where option in (%s) order by updateAt desc' % ','.join(["pointer('Option', '%s')" % i.id for i in options.values()]))
+        result = result.results
+        reviews = {}
+        for r in  result:
+            if r.option not in [i.option for i in reviews.values()]:
+                reviews[r.option.id] = r
+
+        return questions, options, reviews
 
     @property
     def new_option(self):
@@ -104,6 +121,9 @@ class Review(Data):
         review.save()
         return review
 
+    @property
+    def option(self):
+        return self.get('option')
 
 
 
