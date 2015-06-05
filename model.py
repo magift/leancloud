@@ -38,18 +38,18 @@ class Question(Data):
         questions = query.limit(50).find()
 
         #TODO sql inject
-        result = Query.do_cloud_query('select * from Option where question in (%s) order by updateAt desc' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
+        result = Query.do_cloud_query('select * from Option where question in (%s) order by updatedAt desc' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
         for r in result:
-            if r.question not in [i.question for i in options.values()]:
+            if r.question.id not in [i for i in options.keys()]:
                 options[r.question.id] = r
 
-        result = Query.do_cloud_query('select * from Review where option in (%s) order by updateAt desc' % ','.join(["pointer('Option', '%s')" % i.id for i in options.values()]))
+        result = Query.do_cloud_query('select * from Review where option in (%s) order by updatedAt desc' % ','.join(["pointer('Option', '%s')" % i.id for i in options.values()]))
         result = result.results
         reviews = {}
         for r in  result:
-            if r.option not in [i.option for i in reviews.values()]:
+            if r.option.id not in [i for i in reviews.keys()]:
                 reviews[r.option.id] = r
 
         return questions, options, reviews
