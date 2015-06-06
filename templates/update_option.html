@@ -1,0 +1,26 @@
+<%inherit file="base.html"/>
+  <%def name="title()">
+        <%include file="widget_question_title.html" args="question=question"/>
+  </%def>
+
+  <%def name="content()">
+        <form method="POST">
+                <div class="form-group">
+                <label>你推荐的产品名字</label>
+                <input name="title" class="form-control" value="${option.title or ''}"></input>
+                </div>
+
+                <div class="form-group">
+                <label>你的推荐理由<small>（选填）</small></label>
+                <textarea name="review" class="form-control" >${option.review and option.review.title or ''}</textarea>
+                </div>
+
+                <div class="form-group">
+                <label>能帮助了解该产品的网址<small>（选填）</small></label>
+                <input name="link" class="form-control" value="${option.link or ''}"></input>
+                </div>
+
+
+                <input type="submit" class="btn btn-success " value=" 推荐"></input>
+        </div>
+  </%def>
