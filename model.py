@@ -24,12 +24,14 @@ class Question(Data):
         question.save()
         return question
 
+
     @property
     def options(self):
         query = Query(Option) 
         options = query.equal_to('question', self)
         query.descending('updatedAt')
         return query.find()
+
 
     @classmethod
     def hotest(self):
@@ -76,6 +78,19 @@ class Option(Data):
         question.save()
         return option
 
+    def update(self, title, link, review):
+        self.set('title', title)
+        self.set('link', link)
+        self.review.update(review)
+        self.save()
+        return Option.take(self.id)
+
+    @classmethod
+    def take(cls, id):
+        query = Query(cls)
+        query.include('question')
+        return query.get(id)
+
     @property
     def reviews(self):
         query = Query(Review)
@@ -120,6 +135,11 @@ class Review(Data):
         review = Review(title=title, author=author, option=option)
         review.save()
         return review
+
+    def update(self, title):
+        self.set('title', title)
+        self.save()
+        return Review.take(self.id)
 
     @property
     def option(self):

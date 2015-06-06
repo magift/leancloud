@@ -80,6 +80,19 @@ class UpdateOptionHandler(BaseHandler):
         question = option.question
         self.write(render('update_option.html', option=option, question=question))
 
+    def post(self, option_id):
+        option = Option.take(option_id)
+        question = option.question
+        author = self.get_current_user()
+        title = self.get_argument('title').strip()
+        review = self.get_argument('review').strip()
+        link = self.get_argument('link').strip()
+        link = urlnorm.norms(link)
+        if not title: 
+            self.redirect('/option/%s/update' % option.id)
+        option = option.update(title, link, review)
+        self.redirect('/question/%s/' % question.id)
+
 class StaticHandler(BaseHandler):
     def get(self):
         questions = Question.get_date_news()
