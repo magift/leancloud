@@ -16,6 +16,10 @@ class Data(Object):
         query = Query(cls)
         return query.get(id)
 
+    @property
+    def author(self):
+        return self.get('author')
+
 class Question(Data):
     #title; author; 
     @classmethod

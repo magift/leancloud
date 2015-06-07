@@ -28,7 +28,7 @@ urls = [
     (r"/static", StaticHandler),
     (r"/", MainHandler),
 ]
-application = tornado.wsgi.WSGIApplication(urls)
+application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_GOOD_BY_USING_TIAOYI")
 
 
 if __name__ == "__main__":

@@ -24,10 +24,20 @@ def render(templatename, **kwargs):
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         from leancloud import User 
-        QIU_USER = User()
-        QIU_USER.login("test2", "test2")
-        return QIU_USER
-
+        user_id = self.get_secure_cookie('user')
+        user = User()
+        if user_id:
+            user.login(user_id, 'test')
+        else:
+            import random
+            rand = str(random.random())
+            user.set('username', rand)
+            user.set('password', 'test')
+            user.sign_up()
+            user.login(rand, 'test')
+            self.set_secure_cookie('user', rand)
+        return user 
+            
     def write_error(self, status_code, **kwargs):
         ## no print in product env
         self.write(str(traceback.format_exc()))
@@ -52,13 +62,27 @@ class AddQuestionHandler(BaseHandler):
 class QuestionHandler(BaseHandler):
     def get(self, id):
         question = Question.take(id)
-        self.write(render('question.html', question=question))
+        user = self.get_current_user()
+        self.write(render('question.html', question=question, user=user))
 
 class AddOptionHandler(BaseHandler):
     def get(self, question_id):
         question = Question.take(question_id)
-        self.write(render('add_option.html', question=question
-))
+        ##user = self.get_current_user()
+
+        import random
+        from leancloud import User
+        rand = str(random.random())
+        user = User()
+        user.set('username', rand)
+        user.set('password', 'test')
+        user.sign_up()
+        user = User()
+        user.login(rand, 'test')
+        user.set('nickname', 'haha')
+        user.save()
+
+        self.write(render('add_option.html', question=question, user=user))
 
     def post(self, question_id):
         question = Question.take(question_id)
@@ -67,8 +91,12 @@ class AddOptionHandler(BaseHandler):
         review = self.get_argument('review').strip()
         link = self.get_argument('link').strip()
         link = urlnorm.norms(link)
+        nickname = self.get_argument('nickname')
         if not title: 
             self.redirect('/question/%s/option/add' % question.id)
+        if nickname:
+            author.set('nickname', nickname)
+            author.save()
         option = Option.add(title, author, question, link)
         if review:
                 review = Review.add(review, author, option)

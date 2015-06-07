@@ -19,7 +19,9 @@
                     <h5><small>${review.title}</small></h5>
                 %endfor
 
+                %if option.author and user.id == option.author.id:
                 <a href="/option/${option.id}/update">编辑</a>
+                %endif
                 <hr>
         %endfor
 
