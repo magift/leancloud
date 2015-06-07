@@ -14,6 +14,12 @@
                     <h5><small>${i+1}.</small> ${option.title}</h5>
                 %endif
 
+                %if option.get('img'):
+                    <p><a href="${option.get('img').url}">
+                    <img src="${option.get('img').get_thumbnail_url(width='100', height='100')}"></img>
+                    </a></p>
+                %endif
+
                 <span><small>${option.get('nickname') or ''}</small></span>
 
 

@@ -32,7 +32,7 @@ class Question(Data):
     @property
     def options(self):
         query = Query(Option) 
-        options = query.equal_to('question', self)
+        options = query.equal_to('question', self).include('img')
         query.descending('updatedAt')
         return query.find()
 
@@ -75,16 +75,17 @@ class Question(Data):
 class Option(Data):
     #title;author;link;question;
     @classmethod
-    def add(cls, title, author, question, link='', nickname=''):
-        option = Option(title=title, author=author, question=question, link=link, nickname=nickname)
+    def add(cls, title, author, question, link='', nickname='', img=None):
+        option = Option(title=title, author=author, question=question, link=link, nickname=nickname, img=img)
         option.save()
         question.set('updatedAt', datetime.now())
         question.save()
         return option
 
-    def update(self, title, link, review):
+    def update(self, title, link, review, img):
         self.set('title', title)
         self.set('link', link)
+        self.set('img', img)
         self.review.update(review)
         self.save()
         return Option.take(self.id)

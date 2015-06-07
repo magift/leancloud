@@ -6,6 +6,7 @@ from mako.lookup import TemplateLookup
 from lib import urlnorm 
 import sys
 import traceback
+from lib.utils import save_file
 
 mylookup = TemplateLookup(
 	directories=['./templates'], 
@@ -89,7 +90,10 @@ class AddOptionHandler(BaseHandler):
         if nickname:
             author.set('nickname', nickname)
             author.save()
-        option = Option.add(title, author, question, link, nickname)
+
+        img = save_file(self.request.files)
+
+        option = Option.add(title, author, question, link, nickname, img)
         if review:
                 review = Review.add(review, author, option)
         self.redirect('/question/%s/' % question.id)
@@ -110,8 +114,10 @@ class UpdateOptionHandler(BaseHandler):
         link = urlnorm.norms(link)
         if not title: 
             self.redirect('/option/%s/update' % option.id)
-        option = option.update(title, link, review)
+        img = save_file(self.request.files)
+        option = option.update(title, link, review, img)
         self.redirect('/question/%s/' % question.id)
+
 
 class StaticHandler(BaseHandler):
     def get(self):
