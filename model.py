@@ -17,6 +17,10 @@ class Data(Object):
         return query.get(id)
 
     @property
+    def createdAt(self):
+        return str(self.created_at).split()[0].replace('-','.')
+
+    @property
     def author(self):
         return self.get('author')
 
@@ -71,6 +75,7 @@ class Question(Data):
         r = query.find()
 
         return [i for i in r if i not in [j.question for j in Option.get_date_news()]]
+
     
 class Option(Data):
     #title;author;link;question;
