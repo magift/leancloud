@@ -20,7 +20,9 @@
                     </a></p>
                 %endif
 
+                %if option.get('nickname'):
                 <span><small>${option.get('nickname') or ''}</small></span>
+                %endif
 
 
                 %for review in option.reviews:
