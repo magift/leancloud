@@ -90,7 +90,8 @@ class Option(Data):
     def update(self, title, link, review, img):
         self.set('title', title)
         self.set('link', link)
-        self.set('img', img)
+        if img:
+            self.set('img', img)
         if self.review:
                 self.review.update(review)
         else:
