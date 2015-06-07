@@ -20,6 +20,10 @@ class Data(Object):
     def createdAt(self):
         return str(self.created_at).split()[0].replace('-','.')
 
+    @property
+    def author(self):
+        return self.get('author')
+
 class Question(Data):
     #title; author; 
     @classmethod
@@ -76,8 +80,8 @@ class Question(Data):
 class Option(Data):
     #title;author;link;question;
     @classmethod
-    def add(cls, title, author, question, link=''):
-        option = Option(title=title, author=author, question=question, link=link)
+    def add(cls, title, author, question, link='', nickname=''):
+        option = Option(title=title, author=author, question=question, link=link, nickname=nickname)
         option.save()
         question.set('updatedAt', datetime.now())
         question.save()
@@ -150,9 +154,23 @@ class Review(Data):
     def option(self):
         return self.get('option')
 
+class People(Data):
+    def sign_up(self):
+        username = self.get('username')
+        password = self.get('password')
+        people = People(username=username, password=password)
+        people.save()
+        return self.login(username, password)
 
+    def login(self, username, password):
+        assert username
+        assert password
 
-
+        query = Query(People)
+        query.equal_to('username', username).equal_to('password', password)
+        people = query.find()
+        people = people and people[0] or None
+        return people
 
 if __name__ == '__main__':
     #Question.add('haha', 'hehe')

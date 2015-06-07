@@ -23,11 +23,26 @@ def render(templatename, **kwargs):
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
-        from leancloud import User 
-        QIU_USER = User()
-        QIU_USER.login("test2", "test2")
-        return QIU_USER
-
+        #from leancloud import User 
+        from model import People as User
+        user_id = self.get_secure_cookie('user')
+        user = None
+        if user_id:
+            user = User()
+            user = user.login(user_id, 'test')
+        if not user:
+            user = User()
+            import random
+            rand = str(random.random())
+            user.set('username', rand)
+            user.set('password', 'test')
+            user = user.sign_up()
+            user.set('username', user.id)
+            user.save()
+            user = user.login(user.id, 'test')
+            self.set_secure_cookie('user', user.id)
+        return user 
+            
     def write_error(self, status_code, **kwargs):
         ## no print in product env
         self.write(str(traceback.format_exc()))
@@ -52,13 +67,14 @@ class AddQuestionHandler(BaseHandler):
 class QuestionHandler(BaseHandler):
     def get(self, id):
         question = Question.take(id)
-        self.write(render('question.html', question=question))
+        user = self.get_current_user()
+        self.write(render('question.html', question=question, user=user))
 
 class AddOptionHandler(BaseHandler):
     def get(self, question_id):
         question = Question.take(question_id)
-        self.write(render('add_option.html', question=question
-))
+        user = self.get_current_user()
+        self.write(render('add_option.html', question=question, user=user))
 
     def post(self, question_id):
         question = Question.take(question_id)
@@ -67,9 +83,13 @@ class AddOptionHandler(BaseHandler):
         review = self.get_argument('review').strip()
         link = self.get_argument('link').strip()
         link = urlnorm.norms(link)
+        nickname = self.get_argument('nickname')
         if not title: 
             self.redirect('/question/%s/option/add' % question.id)
-        option = Option.add(title, author, question, link)
+        if nickname:
+            author.set('nickname', nickname)
+            author.save()
+        option = Option.add(title, author, question, link, nickname)
         if review:
                 review = Review.add(review, author, option)
         self.redirect('/question/%s/' % question.id)

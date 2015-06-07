@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="form-group">
-                <label>你的推荐理由<small>（选填）</small></label>
+                <label>推荐理由<small>（选填）</small></label>
                 <textarea name="review" rows="6" class="form-control"></textarea>
                 </div>
 
@@ -20,6 +20,10 @@
                 <input name="link" class="form-control"></input>
                 </div>
 
+                <div class="form-group">
+                <label>你的署名<small>（选填）</small></label>
+                <input name="nickname" class="form-control" value="${user and user.get('nickname') or ''}"></input>
+                </div>
 
                 <input type="submit" class="btn btn-success " value=" 推荐"></input>
         </div>

@@ -1,7 +1,11 @@
 # coding: utf-8
 
-#from gevent import monkey
-#monkey.patch_all()
+try:
+    from gevent import monkey
+    monkey.patch_all()
+except:
+    print 'no use gevent'
+    pass
 
 import tornado.web
 import tornado.wsgi
@@ -28,7 +32,7 @@ urls = [
     (r"/static", StaticHandler),
     (r"/", MainHandler),
 ]
-application = tornado.wsgi.WSGIApplication(urls)
+application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_GOOD_BY_USING_TIAOYI")
 
 
 if __name__ == "__main__":
