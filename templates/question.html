@@ -14,7 +14,9 @@
                     <h5><small>${i+1}.</small> ${option.title}</h5>
                 %endif
 
+                %if option.get('nickname'):
                 <span><small>${option.get('nickname') or ''}</small></span>
+                %endif
 
 
                 %for review in option.reviews:

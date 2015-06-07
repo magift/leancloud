@@ -15,8 +15,13 @@
                 </h5>
                 </a>
 
+
                 <% option = options.get(question.id, '')%>
                 %if option:
+                        %if option.get('nickname'):
+                        <span><small>${option.get('nickname') or ''}</small></span>
+                        %endif
+
                 <p><h6>${option.title}
                       <% review = reviews.get(option.id, '') %>
                       % if review:

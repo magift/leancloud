@@ -90,7 +90,11 @@ class Option(Data):
     def update(self, title, link, review):
         self.set('title', title)
         self.set('link', link)
-        self.review.update(review)
+        if self.review:
+                self.review.update(review)
+        else:
+                option = Option.take(self.id)
+                Review.add(review, option.author, option)
         self.save()
         return Option.take(self.id)
 
