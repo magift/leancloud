@@ -17,8 +17,9 @@ from mako.lookup import TemplateLookup
 mylookup = TemplateLookup(
     directories=['/docs'], 
     module_directory='/tmp/mako_modules',
-    input_encoding='utf8',
-    output_encoding='utf8',
+    disable_unicode=True,
+    input_encoding='utf-8',
+    output_encoding='utf-8',
     default_filters=['decode.utf8'],
     encoding_errors='replace'
 )
