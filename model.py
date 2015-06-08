@@ -54,9 +54,11 @@ class Question(Data):
         options = {}
         for r in result:
             if r.question.id not in [i for i in options.keys()]:
-                options[r.question.id] = r
+                options[r.question.id] = [r,]
+            else:
+                options[r.question.id].append(r)
 
-        result = Query.do_cloud_query('select * from Review where option in (%s) order by updatedAt desc' % ','.join(["pointer('Option', '%s')" % i.id for i in options.values()]))
+        result = Query.do_cloud_query('select * from Review where option in (%s) order by updatedAt desc' % ','.join(["pointer('Option', '%s')" % i[0].id for i in options.values()]))
         result = result.results
         reviews = {}
         for r in  result:

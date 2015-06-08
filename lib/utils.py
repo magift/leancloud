@@ -1,7 +1,7 @@
 #coding=utf8
 from leancloud import File
 from StringIO import StringIO
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def save_file(f):
     img = None

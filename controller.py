@@ -10,12 +10,12 @@ from lib.utils import save_file
 
 mylookup = TemplateLookup(
 	directories=['./templates'], 
-#	module_directory='/tmp/mako_modules',
-#	collection_size=500, 
-	input_encoding='utf-8',
-	output_encoding='utf-8', 
-	encoding_errors='replace',
-    default_filters=['h'],
+    module_directory='/tmp/mako_modules',
+    #disable_unicode=True,
+    input_encoding='utf-8',
+    output_encoding='utf-8',
+    default_filters=['decode.utf8', 'h'],
+    encoding_errors='replace'
 )
 
 def render(templatename, **kwargs):

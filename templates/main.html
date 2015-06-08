@@ -16,18 +16,28 @@
                 </a>
 
 
-                <% option = options.get(question.id, '')%>
+                <% 
+                   os = options.get(question.id, [])
+                   option = os and os[0] or None
+                   from lib.utils import mtimeformat 
+                %>
                 %if option:
                         %if option.get('nickname'):
-                        <p style="margin-top:-8px; margin-bottom:-8px;">
-                        <span><small>${option.get('nickname') or ''}</small></span></p>
+                        <p style="margin-top:-6px; margin-bottom:-6px;">
+                        <span><small>${option.get('nickname') or ''}
+                        ${mtimeformat(option.createdAt, True)}
+                        </small></span></p>
                         %endif
 
                 <p><h6>${option.title}
                       <% review = reviews.get(option.id, '') %>
                       % if review:
-                        <small>${review.title}</small></h6></p>
-                    %endif
+                        <small>${review.title}</small>
+                      %endif
+                </h6></p>
+                %endif
+                %if len(os) > 1:
+                        <p style="margin-top:-8px;"><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 》</a></small></p>
                 %endif
                 <hr>
         </div>
