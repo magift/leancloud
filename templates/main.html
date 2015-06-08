@@ -19,7 +19,8 @@
                 <% option = options.get(question.id, '')%>
                 %if option:
                         %if option.get('nickname'):
-                        <span><small>${option.get('nickname') or ''}</small></span>
+                        <p style="margin-top:-8px; margin-bottom:-8px;">
+                        <span><small>${option.get('nickname') or ''}</small></span></p>
                         %endif
 
                 <p><h6>${option.title}

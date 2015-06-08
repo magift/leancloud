@@ -18,7 +18,8 @@ class Data(Object):
 
     @property
     def createdAt(self):
-        return str(self.created_at).split()[0].replace('-','.')
+        return self.created_at.replace(tzinfo=None)
+        
 
     @property
     def author(self):

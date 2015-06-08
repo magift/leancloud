@@ -14,16 +14,16 @@
                     <h5><small>${i+1}.</small> ${option.title}</h5>
                 %endif
 
+                <% from lib.utils import mtimeformat %>
+                %if option.get('nickname'):
+                <p style="margin-top:-8px;margin-bottom:-8px;"><span><small>${option.get('nickname') or ''} </small></span></p>
+                %endif
+
                 %if option.get('img'):
                     <p><a href="${option.get('img').url}">
                     <img src="${option.get('img').get_thumbnail_url(width='100', height='100')}"></img>
                     </a></p>
                 %endif
-
-                %if option.get('nickname'):
-                <span><small>${option.get('nickname') or ''}</small></span>
-                %endif
-
 
                 %for review in option.reviews:
                     <h5><small>${review.title}</small></h5>

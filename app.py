@@ -14,7 +14,14 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 
 
-mylookup = TemplateLookup(directories=['/docs'], module_directory='/tmp/mako_modules')
+mylookup = TemplateLookup(
+    directories=['/docs'], 
+    module_directory='/tmp/mako_modules',
+    input_encoding='utf8',
+    output_encoding='utf8',
+    default_filters=['decode.utf8'],
+    encoding_errors='replace'
+)
 
 def serve_template(templatename, **kwargs):
     mytemplate = mylookup.get_template(templatename)
