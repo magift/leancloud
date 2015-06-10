@@ -25,6 +25,10 @@ class Data(Object):
     def author(self):
         return self.get('author')
 
+    def can_edit(self, user):
+	admin = People().login('admin', 'lifeisgood')
+	return self.author.id == user.id or user.id == admin.id
+
 class Question(Data):
     #title; author; 
     @classmethod

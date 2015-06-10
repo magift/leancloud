@@ -7,6 +7,7 @@ from lib import urlnorm
 import sys
 import traceback
 from lib.utils import save_file
+from model import People as User
 
 mylookup = TemplateLookup(
 	directories=['./templates'], 
@@ -25,9 +26,11 @@ def render(templatename, **kwargs):
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         #from leancloud import User 
-        from model import People as User
         user_id = self.get_secure_cookie('user')
         user = None
+	admin = User().login('admin', 'lifeisgood')
+	if user_id == admin.id:
+	    return admin
         if user_id:
             user = User()
             user = user.login(user_id, 'test')
@@ -48,6 +51,18 @@ class BaseHandler(tornado.web.RequestHandler):
         ## no print in product env
         self.write(str(traceback.format_exc()))
 
+class AdminHandler(BaseHandler):
+    def get(self):
+        password = self.get_argument('password', '')
+	if not password:
+		self.redirect('/')
+
+	user = User()
+	user = user.login('admin', password)
+	if user:
+		self.set_secure_cookie('user', user.id)
+        self.redirect('/')
+        
 class MainHandler(BaseHandler):
     def get(self):
         questions, options, reviews = Question.hotest()
@@ -62,7 +77,6 @@ class AddQuestionHandler(BaseHandler):
         if not title:
             self.redirect('/question/add')
         question = Question.add(title, self.get_current_user())
-        #self.redirect('/question/%s/' % question.id)
         self.redirect('/')
 
 class QuestionHandler(BaseHandler):
@@ -112,7 +126,7 @@ class UpdateOptionHandler(BaseHandler):
         review = self.get_argument('review').strip()
         link = self.get_argument('link').strip()
         link = urlnorm.norms(link)
-        if not title: 
+	if not option.can_edit(author) or not title:
             self.redirect('/option/%s/update' % option.id)
         img = save_file(self.request.files)
         option = option.update(title, link, review, img)
