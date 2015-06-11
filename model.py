@@ -18,7 +18,7 @@ class Data(Object):
 
     @property
     def createdAt(self):
-        return self.created_at.replace(tzinfo=None)
+        return self.created_at.replace(tzinfo=None) + timedelta(hours=8)
         
 
     @property
