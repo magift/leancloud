@@ -49,7 +49,8 @@ class BaseHandler(tornado.web.RequestHandler):
             
     def write_error(self, status_code, **kwargs):
         ## no print in product env
-        self.write(str(traceback.format_exc()))
+        #self.write(str(traceback.format_exc()))
+	pass
 
 class AdminHandler(BaseHandler):
     def get(self):

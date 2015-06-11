@@ -27,7 +27,8 @@ class Data(Object):
 
     def can_edit(self, user):
 	admin = People().login('admin', 'lifeisgood')
-	return self.author.id == user.id or user.id == admin.id
+	author_id = self.author and self.author.id or None
+	return author_id == user.id or user.id == admin.id
 
 class Question(Data):
     #title; author; 
