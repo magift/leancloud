@@ -49,4 +49,11 @@
         </div>
     %endfor
 </div>
+
+<nav>
+  <ul class="pager">
+    <li><a href="/?p=${max(0,p-1)}">上一页</a></li>
+    <li><a href="/?p=${p+1}">下一页</a></li>
+  </ul>
+</nav>
 </%def>

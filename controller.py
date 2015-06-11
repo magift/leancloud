@@ -68,8 +68,9 @@ class AdminHandler(BaseHandler):
         
 class MainHandler(BaseHandler):
     def get(self):
-        questions, options, reviews = Question.hotest()
-        self.write(render('main.html', questions=questions, options=options, reviews=reviews))
+	p = int(self.get_argument('p',0))
+        questions, options, reviews = Question.hotest(p)
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews, p=p))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):

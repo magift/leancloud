@@ -5,6 +5,7 @@ from leancloud import LeanCloudError
 from leancloud import Query
 
 
+PAGE_SIZE = 30
 
 class Data(Object):
     @property
@@ -48,10 +49,10 @@ class Question(Data):
 
 
     @classmethod
-    def hotest(self):
+    def hotest(self, page=0):
         query = Query(Question)
         query.descending('updatedAt')
-        questions = query.limit(50).find()
+        questions = query.skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
 
         #TODO sql inject
         result = Query.do_cloud_query('select * from Option where question in (%s) order by updatedAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
