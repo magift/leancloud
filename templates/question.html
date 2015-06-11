@@ -21,7 +21,7 @@
 
                 %if option.get('img'):
                     <p style="margin-top:10px;"><a href="${option.get('img').url}">
-                    <img src="${option.get('img').get_thumbnail_url(width='100', height='100')}"></img>
+                    <img src="${option.get('img').get_thumbnail_url(width='250', height='250')}"></img>
                     </a></p>
                 %endif
 
@@ -29,7 +29,7 @@
                     <h5><small>${review.title}</small></h5>
                 %endfor
 
-                %if option.author and user.id == option.author.id:
+                %if option.can_edit(user): 
                 <a href="/option/${option.id}/update">编辑</a>
                 %endif
                 <hr>

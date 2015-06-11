@@ -32,6 +32,7 @@ import logging
 logging.basicConfig()
 
 urls = [
+    (r"/admin", AdminHandler),
     (r"/question/add", AddQuestionHandler),
     (r"/question/(.*?)/", QuestionHandler),
     (r"/question/(.*?)/option/add", AddOptionHandler),

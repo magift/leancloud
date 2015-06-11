@@ -32,7 +32,13 @@
                 <p><h6>${option.title}
                       <% review = reviews.get(option.id, '') %>
                       % if review:
-                        <small>${review.title}</small>
+			<% 
+				r_title = review.title
+				length = 100
+				if len(r_title) > length:
+					r_title = r_title[:length] + ' ...'
+			%>
+                        <small>${r_title}</small>
                       %endif
                 </h6></p>
                 %endif
