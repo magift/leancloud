@@ -16,7 +16,7 @@
 
                 <% from lib.utils import mtimeformat %>
                 %if option.get('nickname'):
-                <p style="margin-top:-8px;margin-bottom:-8px;"><span><small>${option.get('nickname') or ''} ${mtimeformat(option.createdAt, True)}</small></span></p>
+                <p style="margin-top:-8px;margin-bottom:-1px;"><span><small>${option.get('nickname') or ''} ${mtimeformat(option.createdAt, True)}</small></span></p>
                 %endif
 
                 %if option.get('img'):
