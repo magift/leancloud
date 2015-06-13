@@ -104,7 +104,7 @@ class AddOptionHandler(BaseHandler):
         link = urlnorm.norms(link)
         nickname = self.get_argument('nickname')
         if not title: 
-            self.redirect('/question/%s/option/add' % question.id)
+            return self.redirect('/question/%s/option/add' % question.id)
         if nickname:
             author.set('nickname', nickname)
             author.save()
@@ -114,7 +114,7 @@ class AddOptionHandler(BaseHandler):
         option = Option.add(title, author, question, link, nickname, img)
         if review:
                 review = Review.add(review, author, option)
-        self.redirect('/question/%s/' % question.id)
+        return self.redirect('/question/%s/' % question.id)
 
 class UpdateOptionHandler(BaseHandler):
     def get(self, option_id):
