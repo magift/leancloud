@@ -114,7 +114,7 @@ class AddOptionHandler(BaseHandler):
         option = Option.add(title, author, question, link, nickname, img)
         if review:
                 review = Review.add(review, author, option)
-        return self.redirect('/question/%s/' % question.id)
+        return self.redirect('/question/%s/#%s' % (question.id, option.id))
 
 class UpdateOptionHandler(BaseHandler):
     def get(self, option_id):
