@@ -12,28 +12,30 @@
         });
         </script-->
         %for i, option in enumerate(question.options):
-                %if option.link:
-                    <a href="${option.link}">
-                %endif
-                    <h5 id="${option.id}"><!--small>${i+1}.</small--> ${option.title} 
+                <h5 id="${option.id}">
+                    %if option.link:
+                        <a href="${option.link}">
+                    %endif
+
+                    <!--small>${i+1}.</small--> ${option.title} 
+
+                    %if option.link:
+                        »</a>
+                    %endif
+
                     <a class="option-up" href="/option/${option.id}/up" >
                     <span class="glyphicon glyphicon-hand-up pull-right"  
                     style="font-size:18px; padding-right:5px;
                     %if user.id in (option.get('vote_users') or []):
                         color:#FA5A1C;
                     %else:
-                        color:#236B4F;
+                        color:#777;
                     %endif
                     " 
                     aria-hidden="true"></span>
                     <span class="pull-right" style="color:#777;padding-right:4px;">${len(option.get('vote_users') or []) or ''}</span>
                     </a>
-                %if option.link:
-                    »</h5></a>
-                %else:
-                    </h5>
-                %endif
-
+                </h5>
 
                 %if option.get('img'):
                     <p style="margin-top:10px;"><a href="${option.get('img').url}">
