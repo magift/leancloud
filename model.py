@@ -44,7 +44,7 @@ class Question(Data):
     def options(self):
         query = Query(Option) 
         options = query.equal_to('question', self).include('img')
-        query.descending('updatedAt')
+        query.descending('updatedAt').descending('vote_users')
         return query.find()
 
 
@@ -55,7 +55,7 @@ class Question(Data):
         questions = query.skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
 
         #TODO sql inject
-        result = Query.do_cloud_query('select * from Option where question in (%s) order by updatedAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
+        result = Query.do_cloud_query('select * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
         for r in result:
@@ -64,7 +64,7 @@ class Question(Data):
             else:
                 options[r.question.id].append(r)
 
-        result = Query.do_cloud_query('select * from Review where option in (%s) order by updatedAt desc limit 1000' % ','.join(["pointer('Option', '%s')" % i[0].id for i in options.values()]))
+        result = Query.do_cloud_query('select * from Review where option in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Option', '%s')" % i[0].id for i in options.values()]))
         result = result.results
         reviews = {}
         for r in  result:
@@ -76,14 +76,6 @@ class Question(Data):
     @property
     def new_option(self):
         return self.options and self.options[0] or None
-
-    @classmethod
-    def get_date_news(self):
-        query = Query(Question)
-        query.greater_than("createdAt", datetime.now() - timedelta(days=1))
-        r = query.find()
-
-        return [i for i in r if i not in [j.question for j in Option.get_date_news()]]
 
     
 class Option(Data):
@@ -138,18 +130,16 @@ class Option(Data):
     def link(self):
         return self.get('link')
 
-    @classmethod
-    def get_date_news(self):
-        query = Query(Option)
-        query.include("question").greater_than('createdAt', datetime.now() - timedelta(days=1)).descending('createdAt')
-        r = query.find()
-        d = dict()
-        for i in r:
-            if i.question in d:
-                continue
-            else:
-                d.update({i.question:i})
-        return d.values()
+    def up(self, user):
+        vote_users = self.get('vote_users') or []
+        if user.id in vote_users:
+            vote_users.remove(user.id)
+        else:
+            vote_users.append(user.id)
+        self.set('vote_users', vote_users)
+        self.save()
+        return 
+         
         
 
 class Review(Data):
