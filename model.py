@@ -132,10 +132,12 @@ class Option(Data):
 
     def up(self, user):
         vote_users = self.get('vote_users') or []
-        if user.id not in vote_users:
+        if user.id in vote_users:
+            vote_users.remove(user.id)
+        else:
             vote_users.append(user.id)
-            self.set('vote_users', vote_users)
-            self.save()
+        self.set('vote_users', vote_users)
+        self.save()
         return 
          
         
