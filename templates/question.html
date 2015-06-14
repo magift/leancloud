@@ -1,5 +1,9 @@
 <%inherit file="base.html"/>
 
+<%def name="header()">
+${question.title}
+</%def>
+
 <%def name="title()">
 <%include file="widget_question_title.html" args="question=question"/>
 </%def>
@@ -21,7 +25,7 @@
 
                 %if option.get('img'):
                     <p style="margin-top:10px;"><a href="${option.get('img').url}">
-                    <img src="${option.get('img').get_thumbnail_url(width='250', height='250')}"></img>
+                    <img src="${option.get('img').get_thumbnail_url(width='290', height='290', quality=100)}"></img>
                     </a></p>
                 %endif
 
