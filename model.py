@@ -55,7 +55,7 @@ class Question(Data):
         questions = query.skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
 
         #TODO sql inject
-        result = Query.do_cloud_query('select * from Option where question in (%s) order by updatedAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
+        result = Query.do_cloud_query('select * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
         for r in result:
@@ -64,7 +64,7 @@ class Question(Data):
             else:
                 options[r.question.id].append(r)
 
-        result = Query.do_cloud_query('select * from Review where option in (%s) order by updatedAt desc limit 1000' % ','.join(["pointer('Option', '%s')" % i[0].id for i in options.values()]))
+        result = Query.do_cloud_query('select * from Review where option in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Option', '%s')" % i[0].id for i in options.values()]))
         result = result.results
         reviews = {}
         for r in  result:
