@@ -15,15 +15,15 @@
                 </h5>
                 </a>
 
-
                 <% 
                    os = options.get(question.id, [])
                    option = os and os[0] or None
                    from lib.utils import mtimeformat 
                 %>
+
                 %if option:
                         %if option.get('nickname'):
-                        <p style="margin-top:-6px; margin-bottom:-6px;">
+                        <p style="margin-top:-3px; margin-bottom:-3px;">
                         <span><small>${option.get('nickname') or ''}
                         ${mtimeformat(option.createdAt, True)}
                         </small></span></p>
@@ -43,7 +43,7 @@
                 </h6></p>
                 %endif
                 %if len(os) > 1:
-                        <p style="margin-top:-8px;"><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 </a></small></p>
+                        <p style="margin-top:-3px;"><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 </a></small></p>
                 %endif
                 <hr>
         </div>
