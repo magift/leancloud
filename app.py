@@ -37,8 +37,8 @@ urls = [
     (r"/question/(.*?)/", QuestionHandler),
     (r"/question/(.*?)/option/add", AddOptionHandler),
     (r"/option/(.*?)/update", UpdateOptionHandler),
+    (r"/option/(.*?)/up", UpOptionHandler),
     (r"/review/add", AddReviewHandler),
-    (r"/static", StaticHandler),
     (r"/", MainHandler),
 ]
 application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_GOOD_BY_USING_TIAOYI")

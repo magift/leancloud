@@ -1,17 +1,44 @@
 <%inherit file="base.html"/>
-
 <%def name="title()">
 <%include file="widget_question_title.html" args="question=question"/>
 </%def>
 
 <%def name="content()">
+        <!--script>
+        $(".option-up").click(function(){
+            alert(1);
+            $.get($(this).attr(url));
+            return false;
+        });
+        </script-->
         %for i, option in enumerate(question.options):
                 %if option.link:
                     <a href="${option.link}">
-                    <h5><small>${i+1}.</small> ${option.title} »</h5>
+                %endif
+                    <h5 id="${option.id}"><!--small>${i+1}.</small--> ${option.title} 
+                    <a class="option-up" href="/option/${option.id}/up" >
+                    <span class="glyphicon glyphicon-hand-up pull-right"  
+                    style="font-size:18px; padding-right:5px;
+                    %if user.id in (option.get('vote_users') or []):
+                        color:#FA5A1C;
+                    %else:
+                        color:#236B4F;
+                    %endif
+                    " 
+                    aria-hidden="true"></span>
+                    <span class="pull-right" style="color:#777;padding-right:4px;">${len(option.get('vote_users') or []) or ''}</span>
                     </a>
+                %if option.link:
+                    »</h5></a>
                 %else:
-                    <h5><small>${i+1}.</small> ${option.title}</h5>
+                    </h5>
+                %endif
+
+
+                %if option.get('img'):
+                    <p style="margin-top:10px;"><a href="${option.get('img').url}">
+                    <img src="${option.get('img').get_thumbnail_url(width='250', height='250')}"></img>
+                    </a></p>
                 %endif
 
                 <% from lib.utils import mtimeformat %>
@@ -19,11 +46,6 @@
                 <p style="margin-top:-8px;margin-bottom:-1px;"><span><small>${option.get('nickname') or ''} ${mtimeformat(option.createdAt, True)}</small></span></p>
                 %endif
 
-                %if option.get('img'):
-                    <p style="margin-top:10px;"><a href="${option.get('img').url}">
-                    <img src="${option.get('img').get_thumbnail_url(width='250', height='250')}"></img>
-                    </a></p>
-                %endif
 
                 %for review in option.reviews:
                     <h5><small>${review.title}</small></h5>

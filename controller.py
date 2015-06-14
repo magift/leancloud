@@ -137,12 +137,6 @@ class UpdateOptionHandler(BaseHandler):
         self.redirect('/question/%s/' % question.id)
 
 
-class StaticHandler(BaseHandler):
-    def get(self):
-        questions = Question.get_date_news()
-        option = Option.get_date_news()
-        self.write(render('static.html', questions=questions, option=option))
-
 class AddReviewHandler(BaseHandler):
     def post(self):
         option_id = self.get_argument('oid')
@@ -152,4 +146,9 @@ class AddReviewHandler(BaseHandler):
 )
         self.redirect('/question/%s/' % option.question.id)
 
-        
+class UpOptionHandler(BaseHandler):        
+    def get(self, option_id):
+        user = self.get_current_user()
+        option = Option.take(option_id)
+        option.up(user)
+        self.redirect('/question/%s/#%s' % (option.question.id, option.id))

@@ -77,14 +77,6 @@ class Question(Data):
     def new_option(self):
         return self.options and self.options[0] or None
 
-    @classmethod
-    def get_date_news(self):
-        query = Query(Question)
-        query.greater_than("createdAt", datetime.now() - timedelta(days=1))
-        r = query.find()
-
-        return [i for i in r if i not in [j.question for j in Option.get_date_news()]]
-
     
 class Option(Data):
     #title;author;link;question;
@@ -138,18 +130,14 @@ class Option(Data):
     def link(self):
         return self.get('link')
 
-    @classmethod
-    def get_date_news(self):
-        query = Query(Option)
-        query.include("question").greater_than('createdAt', datetime.now() - timedelta(days=1)).descending('createdAt')
-        r = query.find()
-        d = dict()
-        for i in r:
-            if i.question in d:
-                continue
-            else:
-                d.update({i.question:i})
-        return d.values()
+    def up(self, user):
+        vote_users = self.get('vote_users') or []
+        if user.id not in vote_users:
+            vote_users.append(user.id)
+            self.set('vote_users', vote_users)
+            self.save()
+        return 
+         
         
 
 class Review(Data):
