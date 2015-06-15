@@ -41,6 +41,13 @@
                         <small>${r_title}</small>
                       %endif
                 </h6></p>
+
+
+			%if option.get('img'):
+			    <p style="margin-top:10px;"><a href="${option.get('img').url}">
+			    <img src="${option.get('img').get_thumbnail_url(width='290', height='290')}"></img>
+			    </a></p>
+			%endif
                 %endif
                 %if len(os) > 1:
                         <p style="margin-top:-3px;"><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 </a></small></p>

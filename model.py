@@ -44,7 +44,7 @@ class Question(Data):
     def options(self):
         query = Query(Option) 
         options = query.equal_to('question', self).include('img')
-        query.descending('updatedAt').descending('vote_users')
+        query.descending('vote_users')
         return query.find()
 
 
@@ -55,7 +55,7 @@ class Question(Data):
         questions = query.skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
 
         #TODO sql inject
-        result = Query.do_cloud_query('select * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
+        result = Query.do_cloud_query('select include img, * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
         for r in result:
