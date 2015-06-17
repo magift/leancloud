@@ -44,8 +44,9 @@ class Question(Data):
     def options(self):
         query = Query(Option) 
         options = query.equal_to('question', self).include('img')
-        query.descending('vote_users')
-        return query.find()
+	options = options.find()
+	options.sort(key=lambda x:len(x.get('vote_users') or []), reverse=True)
+        return options
 
 
     @classmethod
