@@ -11,7 +11,7 @@ def save_file(f):
          f =f['img'][0]
          content_type = f['content_type']
          if content_type in image_type_list:
-            if len(f['body']) < 4 * 1024 * 1024:
+            if len(f['body']) < 10 * 1024 * 1024:
                 suffix = content_type.split('/')[-1]
                 img = File(suffix, StringIO(f['body']), content_type)
                 img.save()

@@ -1,4 +1,9 @@
 <%inherit file="base.html"/>
+
+<%def name="header()">
+<title>${question.title}</title>
+</%def>
+
 <%def name="title()">
 <%include file="widget_question_title.html" args="question=question"/>
 </%def>
@@ -87,6 +92,10 @@
                 <hr>
         %endfor
 
-        <a href="/question/${question.id}/option/add"><button type="button" class="btn btn-success">+ 我要推荐</button> 
+        <a href="/question/${question.id}/option/add"><button type="button" class="btn btn-success">我要推荐</button> 
         </a>
+
+	<p style="padding-top:150px;text-align:center">
+	<img src="http://ac-vz3hsizf.clouddn.com/V1Xhrnxok8GGa5YS2xiPKztGhDg2nmguP1ri6vog.jpg" width="300"></img>
+	</p>
 </%def>
