@@ -75,7 +75,7 @@
 
                 <form method="POST" action="/review/add" style="display:none;" id="review_form_${option.id}">
                     <div class="form-group">
-                        <label>评论</label>
+                        <label>评论"${option.get('title')}"</label>
                         <textarea name="title" rows="4" class="form-control"></textarea>
                         <input name="oid" value="${option.id}" type="hidden"></input>
                     </div>
