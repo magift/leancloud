@@ -3,7 +3,7 @@
 <%def name="content()">
 
 <div class="clearfix form-group">
-        <a href="/question/add" class="pull-right"><button type="button" class="btn btn-success">+ 求推荐</button> 
+        <a href="/question/add" class="pull-right"><button type="button" class="btn btn-success">我要求推荐</button> 
 </div>
 
 <div>
@@ -43,11 +43,11 @@
                 </h6></p>
 
 
-			%if option.get('img'):
-			    <p style="margin-top:10px;">
-			    <img src="${option.get('img').get_thumbnail_url(width='160', height='160')}"></img>
-			    </p>
-			%endif
+			##%if option.get('img'):
+			##    <p style="margin-top:10px;">
+			##    <img src="${option.get('img').get_thumbnail_url(width='160', height='160')}"></img>
+			##    </p>
+			##%endif
                 %endif
                 %if len(os) > 1:
                         <p style="margin-top:-3px;"><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 </a></small></p>
