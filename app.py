@@ -35,6 +35,7 @@ urls = [
     (r"/admin", AdminHandler),
     (r"/question/add", AddQuestionHandler),
     (r"/question/(.*?)/", QuestionHandler),
+    #TODO no more question id
     (r"/question/(.*?)/option/add", AddOptionHandler),
     (r"/option/(.*?)/update", UpdateOptionHandler),
     (r"/option/(.*?)/up", UpOptionHandler),

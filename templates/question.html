@@ -37,25 +37,53 @@
                     </a>
                 </h5>
 
+                <% from lib.utils import mtimeformat %>
+                <p style="margin-top:-8px;margin-bottom:10px;">
+                <span><small>
+                %if option.get('nickname'):
+                    ${option.get('nickname') or ''} 
+                %endif
+                ${mtimeformat(option.createdAt, True)}</small></span>
+
+                %if option.can_edit(user): 
+                <a href="/option/${option.id}/update">编辑</a>
+                %endif
+                </p>
+
+
                 %if option.get('img'):
                     <p style="margin-top:10px;"><a href="${option.get('img').url}">
                     <img src="${option.get('img').get_thumbnail_url(width='290', height='290')}"></img>
                     </a></p>
                 %endif
 
-                <% from lib.utils import mtimeformat %>
-                %if option.get('nickname'):
-                <p style="margin-top:-8px;margin-bottom:-1px;"><span><small>${option.get('nickname') or ''} ${mtimeformat(option.createdAt, True)}</small></span></p>
-                %endif
-
-
                 %for review in option.reviews:
-                    <h5><small>${review.title}</small></h5>
+                    <% author = review.get('author') %>
+                    <h5><small>${review.title}</small>
+                        %if author and author.get('nickname'):
+                          - ${author.get('nickname')} 
+                        %endif
+                    </h5>
                 %endfor
 
-                %if option.can_edit(user): 
-                <a href="/option/${option.id}/update">编辑</a>
-                %endif
+
+                <form method="POST" action="/review/add">
+                    <div class="form-group">
+                        <label>评论</label>
+                        <textarea name="title" rows="4" class="form-control"></textarea>
+                        <input name="oid" value="${option.id}" type="hidden"></input>
+                    </div>
+
+                    %if not user.get('nickname'):
+                        <div class="form-group">
+                            <label>你的署名</label>
+                            <input name="nickname" class="form-control"></input>
+                        </div>
+                    %endif
+
+                    <input type="submit" class="btn btn-success">评论</input>
+                </form>
+
                 <hr>
         %endfor
 
