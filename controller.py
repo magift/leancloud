@@ -105,9 +105,7 @@ class AddOptionHandler(BaseHandler):
         nickname = self.get_argument('nickname')
         if not title: 
             return self.redirect('/question/%s/option/add' % question.id)
-        if nickname:
-            author.set('nickname', nickname)
-            author.save()
+        author.update_nickname(nickname)
 
         img = save_file(self.request.files)
 
@@ -127,13 +125,12 @@ class UpdateOptionHandler(BaseHandler):
         question = option.question
         author = self.get_current_user()
         title = self.get_argument('title').strip()
-        review = self.get_argument('review').strip()
         link = self.get_argument('link').strip()
         link = urlnorm.norms(link)
-	if not option.can_edit(author) or not title:
+        if not option.can_edit(author) or not title:
             self.redirect('/option/%s/update' % option.id)
         img = save_file(self.request.files)
-        option = option.update(title, link, review, img)
+        option = option.update(title, link, img)
         self.redirect('/question/%s/' % question.id)
 
 
@@ -141,10 +138,14 @@ class AddReviewHandler(BaseHandler):
     def post(self):
         option_id = self.get_argument('oid')
         option = Option.take(option_id)
-        title = self.get_argument('title')
-        Review.add(title=title, author=self.get_current_user(), option=option
-)
-        self.redirect('/question/%s/' % option.question.id)
+        title = self.get_argument('title').strip()
+        nickname = self.get_argument('nickname', '').strip()
+        author = self.get_current_user()
+        review = Review.add(title=title, author=author, option=option)
+        if nickname:
+            author.update_nickname(nickname)
+
+        self.redirect('/question/%s/#%s' % (option.question.id,review.id))
 
 class UpOptionHandler(BaseHandler):        
     def get(self, option_id):

@@ -89,16 +89,11 @@ class Option(Data):
         question.save()
         return option
 
-    def update(self, title, link, review, img):
+    def update(self, title, link, img):
         self.set('title', title)
         self.set('link', link)
         if img:
             self.set('img', img)
-        if self.review:
-                self.review.update(review)
-        else:
-                option = Option.take(self.id)
-                Review.add(review, option.author, option)
         self.save()
         return Option.take(self.id)
 
@@ -111,7 +106,7 @@ class Option(Data):
     @property
     def reviews(self):
         query = Query(Review)
-        reviews = query.equal_to('option', self)
+        reviews = query.equal_to('option', self).include('author')
         query.ascending('updateAt')
         return query.find()
 
@@ -177,6 +172,10 @@ class People(Data):
         people = query.find()
         people = people and people[0] or None
         return people
+
+    def update_nickname(self, name):
+        self.set('nickname', name)
+        self.save()
 
 if __name__ == '__main__':
     #Question.add('haha', 'hehe')
