@@ -45,10 +45,11 @@
                 <% from lib.utils import mtimeformat %>
                 <p style="margin-top:-8px;margin-bottom:10px;">
                 <span><small>
+                ${mtimeformat(option.createdAt, True)}
                 %if option.get('nickname'):
                     ${option.get('nickname') or ''} 
                 %endif
-                ${mtimeformat(option.createdAt, True)}</small></span>
+                </small></span>
 
                 %if option.can_edit(user): 
                 <a href="/option/${option.id}/update">编辑</a>
