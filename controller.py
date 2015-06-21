@@ -99,6 +99,7 @@ class AddOptionHandler(BaseHandler):
         question = Question.take(question_id)
         author = self.get_current_user()
         title = self.get_argument('title').strip()
+        review = self.get_argument('review', '').strip()
         link = self.get_argument('link', '').strip()
         link = urlnorm.norms(link)
         nickname = self.get_argument('nickname', '')
@@ -109,6 +110,8 @@ class AddOptionHandler(BaseHandler):
         img = save_file(self.request.files)
 
         option = Option.add(title, author, question, link, nickname, img)
+        if review:
+            Review.add(review, author, option)
         return self.redirect('/question/%s/#%s' % (question.id, option.id))
 
 class UpdateOptionHandler(BaseHandler):
