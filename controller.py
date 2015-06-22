@@ -118,7 +118,8 @@ class UpdateOptionHandler(BaseHandler):
     def get(self, option_id):
         option = Option.take(option_id)
         question = option.question
-        self.write(render('update_option.html', option=option, question=question))
+        user = self.get_current_user()
+        self.write(render('update_option.html', option=option, question=question, user=user))
 
     def post(self, option_id):
         option = Option.take(option_id)
@@ -155,3 +156,20 @@ class UpOptionHandler(BaseHandler):
         option = Option.take(option_id)
         option.up(user)
         self.redirect('/question/%s/#%s' % (option.question.id, option.id))
+
+class UpdateQuestionTagHandler(BaseHandler):
+    def post(self, question_id):
+        question = Question.take(question_id)
+        tags = self.get_argument('tags').strip()
+        Tag2Question.update(question, tags)
+        self.redirect('question/%s' % (question.id))
+        
+class TagHandler(BaseHandler):
+    def get(self, tag):
+        tag = tag.strip()
+        tag2question = Tag2Question.gets_by_tag(tag)
+        questions = [i.get('question') for i in tag2question] 
+        #TOTO refact question list widget; pager
+        self.write(render('tag.html', questions=questions, tag=tag))
+
+

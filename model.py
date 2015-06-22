@@ -20,7 +20,6 @@ class Data(Object):
     @property
     def createdAt(self):
         return self.created_at.replace(tzinfo=None) + timedelta(hours=8)
-        
 
     @property
     def author(self):
@@ -77,6 +76,11 @@ class Question(Data):
     @property
     def new_option(self):
         return self.options and self.options[0] or None
+
+    @property
+    def tags(self):
+        tags = Tag2Question.gets_by_question(self)
+        return ' '.join([t.get('tag').get('title') for t in tags])
 
     
 class Option(Data):
@@ -177,7 +181,61 @@ class People(Data):
         self.set('nickname', name)
         self.save()
 
+    def is_admin(self)
+        if self.get('username') == 'admin' and self.get('password') == 'lifeisgood':
+            return True
+        return False
+
+class Tag2Question(Data):
+    #question, tag
+    def update(cls, question, tags):
+        tags = list(set([t for t in tags.split() if t]))
+        query = Query(cls)
+        query.equal_to('question', question).destroy_all()
+        for tag in tags:
+            tag = Tag.get_by_title(tag)
+            if not tag:
+                tag = Tag.add(tag)
+            t = Tag2Question(tag=tag, question=question) 
+            t.save()
+
+    def gets_by_tag(cls, tag_name):
+        tag = Tag.get_by_title(tag_name.strip())
+        if not tag:
+            return []
+
+        query = Query(cls)
+        r = query.equal_to('tag', tag).include('question').descending('createdAt').find()
+        return r
+
+    def gets_by_question(cls, question):
+        query = Query(cls)
+        r = query.equal_to('question', question).include('tag').find()
+        return r
+
+class Tag(Data):
+    def add(cls, title):
+        title = title.strip()
+        query = Query(cls)
+        tag = query.equal_to('title', title).find()
+        if not tag:
+            tag = Tag(title=title)
+            tag.save()
+        return tag
+
+    def gets(cls):
+        query = Query(cls)
+        tags = query.descending('updateAt').limit(100).find()
+        return tags
+
+    def get_by_title(cls, title):
+        title = title.strip()
+        query = Query(cls)
+        tag = query.equal_to('title', title).find()
+        return tag
+        
+
+
 if __name__ == '__main__':
     #Question.add('haha', 'hehe')
     pass
-
