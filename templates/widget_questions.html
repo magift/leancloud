@@ -1,0 +1,51 @@
+
+<div>
+    %for question in questions:
+        <div>
+                <a  href="/question/${question.id}/">
+                <h5>
+                    ${question.title}
+                </h5>
+                </a>
+
+                <% 
+                   os = options.get(question.id, [])
+                   option = os and os[0] or None
+                   from lib.utils import mtimeformat 
+                %>
+
+                %if option:
+                        %if option.get('nickname'):
+                        <p style="margin-top:-3px; margin-bottom:-3px;">
+                        <span><small>${option.get('nickname') or ''}
+                        ${mtimeformat(option.createdAt, True)}
+                        </small></span></p>
+                        %endif
+
+                <p><h6>${option.title}
+                      <% review = reviews.get(option.id, '') %>
+                      % if review:
+			<% 
+				r_title = review.title
+				length = 100
+				if len(r_title) > length:
+					r_title = r_title[:length] + ' ...'
+			%>
+                        <small>${r_title}</small>
+                      %endif
+                </h6></p>
+
+
+			##%if option.get('img'):
+			##    <p style="margin-top:10px;">
+			##    <img src="${option.get('img').get_thumbnail_url(width='160', height='160')}"></img>
+			##    </p>
+			##%endif
+                %endif
+                %if len(os) > 1:
+                        <p style="margin-top:-3px;"><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 </a></small></p>
+                %endif
+                <hr>
+        </div>
+    %endfor
+</div>
