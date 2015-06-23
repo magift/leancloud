@@ -1,3 +1,4 @@
+#coding=utf8
 from urlparse import urlparse
 from model import *
 import tornado.web
@@ -68,9 +69,16 @@ class AdminHandler(BaseHandler):
         
 class MainHandler(BaseHandler):
     def get(self):
-	p = int(self.get_argument('p',0))
-        questions, options, reviews = Question.hotest(p)
-        self.write(render('main.html', questions=questions, options=options, reviews=reviews, p=p))
+        p = int(self.get_argument('p',0))
+        tag = self.get_argument('tag', '').strip()
+        tags = Tag.takes(10)
+        if tag == '':
+            questions, options, reviews = Question.hotest(p)
+        else:
+            tag2question = Tag2Question.gets_by_tag(tag, p)
+            questions = [i.get('question') for i in tag2question] 
+            options, reviews = Question.get_other_by_questions(questions)
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews, p=p, tags=tags, tag=tag))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):
@@ -162,13 +170,13 @@ class UpdateQuestionTagHandler(BaseHandler):
         question = Question.take(question_id)
         tags = self.get_argument('tags').strip()
         Tag2Question.update(question, tags)
-        self.redirect('question/%s' % (question.id))
+        self.redirect('/question/%s/' % (question.id))
         
 class TagHandler(BaseHandler):
     def get(self, tag):
         tag = tag.strip()
         tag2question = Tag2Question.gets_by_tag(tag)
         questions = [i.get('question') for i in tag2question] 
-        #TOTO refact question list widget; pager
-        self.write(render('tag.html', questions=questions, tag=tag))
+        options, reviews = Question.get_other_by_questions(questions)
+        self.write(render('tag.html', questions=questions, tag=tag, options=options, reviews=reviews))
 

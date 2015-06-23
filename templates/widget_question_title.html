@@ -2,11 +2,11 @@
 <div class="jumbotron" style="background-color:#333">
     <div class="container" style="padding-left:0px;">
             <h4 style="color:#fff">${question.title}</h4>
-            %if user.is_admin()
+            %if user.is_admin():
             <p>
-                    <form method="POST" action="/">
+                    <form method="POST" action="/question/${question.id}/tag/update">
                     <div class="form-group">
-                    <label>标签<small>（选填,空格区隔）</small></label>
+                    <label style="color:#FFF">标签<small>（选填,空格区隔）</small></label>
                     <input name="tags" class="form-control" value="${question.tags}"></input>
                     </div>
                     <input type="submit" class="btn btn-success " value="提交"></input>

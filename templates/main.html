@@ -6,16 +6,30 @@
         <a href="/question/add" class="pull-right"><button type="button" class="btn btn-success">我要求推荐</button> 
 </div>
 
-%for tag in tags:
-    <a href="/tag/${tag.get('title')}">${tag.get('title')}</a>
+<a href="/"
+	%if tag == '':
+		style="background-color:#CCC"
+	%endif
+>全部
+</a>
+
+%for t in tags:
+    <a href="/?tag=${t.get('title')}"
+	%if tag == t.get('title'):
+		style="background-color:#CCC"
+	%endif
+    >${t.get('title')}</a>
 %endfor
 
 <%include file="widget_questions.html" args="questions=questions"/>
 
+%if len(questions) == PAGE_SIZE:
 <nav>
   <ul class="pager">
     <li><a href="/?p=${max(0,p-1)}">上一页</a></li>
     <li><a href="/?p=${p+1}">下一页</a></li>
   </ul>
 </nav>
+%endif
+
 </%def>

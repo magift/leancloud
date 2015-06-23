@@ -48,14 +48,9 @@ application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_G
 
 
 if __name__ == "__main__":
-    port = 8888
-    try:
-        import config
-        leancloud.init(config.leancloud_id, master_key=config.leancloud_key)
-        port = config.port
-    except:
-        pass
-        
-    application.listen(port)
-    tornado.ioloop.IOLoop.instance().start()
+	import config
+	leancloud.init(config.leancloud_id, master_key=config.leancloud_key)
+	port = config.port
+	application.listen(port)
+	tornado.ioloop.IOLoop.instance().start()
 
