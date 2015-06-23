@@ -172,4 +172,3 @@ class TagHandler(BaseHandler):
         #TOTO refact question list widget; pager
         self.write(render('tag.html', questions=questions, tag=tag))
 
-

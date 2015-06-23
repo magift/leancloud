@@ -223,9 +223,9 @@ class Tag(Data):
             tag.save()
         return tag
 
-    def gets(cls):
+    def gets(cls, limit=10):
         query = Query(cls)
-        tags = query.descending('updateAt').limit(100).find()
+        tags = query.descending('updateAt').limit(limit).find()
         return tags
 
     def get_by_title(cls, title):

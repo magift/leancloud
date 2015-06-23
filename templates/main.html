@@ -6,6 +6,10 @@
         <a href="/question/add" class="pull-right"><button type="button" class="btn btn-success">我要求推荐</button> 
 </div>
 
+%for tag in tags:
+    <a href="/tag/${tag.get('title')}">${tag.get('title')}</a>
+%endfor
+
 <%include file="widget_questions.html" args="questions=questions"/>
 
 <nav>
