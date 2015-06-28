@@ -213,7 +213,7 @@ class Tag2Question(Data):
             return []
 
         query = Query(cls)
-        r = query.equal_to('tag', tag).include('question').descending('createdAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
+        r = query.equal_to('tag', tag).include('question').descending('question.updatedAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
         return [i for i in r if i]
 
     @classmethod
