@@ -6,8 +6,9 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from lib import urlnorm 
 import sys
+import re
 import traceback
-from lib.utils import save_file
+from lib.utils import save_file, pager
 from model import People as User
 
 mylookup = TemplateLookup(
@@ -85,7 +86,8 @@ class MainHandler(BaseHandler):
             tag2question = Tag2Question.gets_by_tag(tag, p)
             questions = [i.get('question') for i in tag2question] 
             options, reviews = Question.get_other_by_questions(questions)
-        self.write(render('main.html', questions=questions, options=options, reviews=reviews, p=p, tags=tags, tag=tag))
+        prev, next = pager(self.request.uri, p)
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews, tags=tags, tag=tag, prev=prev, next=next))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):
