@@ -11,7 +11,7 @@ from model import People as User
 
 mylookup = TemplateLookup(
 	directories=['./templates'], 
-    module_directory='/tmp/mako_modules',
+    #module_directory='/tmp/mako_modules',
     #disable_unicode=True,
     input_encoding='utf-8',
     output_encoding='utf-8',
