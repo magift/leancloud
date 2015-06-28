@@ -50,13 +50,13 @@ margin-right:18px;margin-top:-2px;
 
 <%include file="widget_questions.html" args="questions=questions"/>
 
-##%if len(questions) == PAGE_SIZE:
 <nav>
   <ul class="pager">
-    <li><a href="/?p=${max(0,p-1)}">上一页</a></li>
-    <li><a href="/?p=${p+1}">下一页</a></li>
+    <li><a href="${prev}">上一页</a></li>
+    <li><a href="${next}">下一页</a></li>
   </ul>
 </nav>
+##%if len(questions) == PAGE_SIZE:
 ##%endif
 
 </%def>

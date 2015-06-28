@@ -2,6 +2,7 @@
 from leancloud import File
 from StringIO import StringIO
 from datetime import datetime, timedelta
+import re
 
 def save_file(f):
     img = None
@@ -52,3 +53,20 @@ def yesterdaytime(time):
         return "%s月%s日"% (time.month,time.day)
     else:
         return "%s年%s月%s日"% (time.year,time.month,time.day)
+
+def pager(uri, p):
+    prev = max(0, p-1)
+    next = p + 1
+    if uri.find('&p=') != -1:
+        next = re.sub('&p=(\d+)', '&p=%s' % next, uri)
+        prev = re.sub('&p=(\d+)', '&p=%s' % prev, uri)
+    elif uri.find('?p=') != -1:
+        next = re.sub('\?p=(\d+)', '?p=%s' % next, uri)
+        prev = re.sub('\?p=(\d+)', '?p=%s' % prev, uri)
+    elif uri.find('?') != -1:
+        next = uri + '&p=%s' % next
+        prev = uri + '&p=%s' % prev
+    else:
+        next = uri + '?p=%s' % next
+        prev = uri + '?p=%s' % prev
+    return prev, next
