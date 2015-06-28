@@ -1,3 +1,4 @@
+#coding=utf8
 from urlparse import urlparse
 from model import *
 import tornado.web
@@ -68,9 +69,23 @@ class AdminHandler(BaseHandler):
         
 class MainHandler(BaseHandler):
     def get(self):
-	p = int(self.get_argument('p',0))
-        questions, options, reviews = Question.hotest(p)
-        self.write(render('main.html', questions=questions, options=options, reviews=reviews, p=p))
+        p = int(self.get_argument('p',0))
+        tag = self.get_argument('tag', '').strip()
+        tags = Tag.takes()
+        if tag == '':
+            questions, options, reviews = Question.hotest(p)
+        else:
+            if tag not in [i.get('title') for i in tags[:3]]:
+                temp = tags[2]
+                for j, t in enumerate(tags):
+                    if t.get('title') == tag:
+                        tags[2] = t
+                        tags[j] = temp
+                        
+            tag2question = Tag2Question.gets_by_tag(tag, p)
+            questions = [i.get('question') for i in tag2question] 
+            options, reviews = Question.get_other_by_questions(questions)
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews, p=p, tags=tags, tag=tag))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):
@@ -118,7 +133,8 @@ class UpdateOptionHandler(BaseHandler):
     def get(self, option_id):
         option = Option.take(option_id)
         question = option.question
-        self.write(render('update_option.html', option=option, question=question))
+        user = self.get_current_user()
+        self.write(render('update_option.html', option=option, question=question, user=user))
 
     def post(self, option_id):
         option = Option.take(option_id)
@@ -155,3 +171,20 @@ class UpOptionHandler(BaseHandler):
         option = Option.take(option_id)
         option.up(user)
         self.redirect('/question/%s/#%s' % (option.question.id, option.id))
+
+class UpdateQuestionTagHandler(BaseHandler):
+    def post(self, question_id):
+        question = Question.take(question_id)
+        tags = self.get_argument('tags').strip()
+        Tag2Question.update(question, tags)
+        self.redirect('/question/%s/' % (question.id))
+        
+class TagHandler(BaseHandler):
+    def get(self, tag):
+        tag = tag.strip()
+        tag2question = Tag2Question.gets_by_tag(tag)
+        questions = [i.get('question') for i in tag2question] 
+        questions = [i for i in questions if i]
+        options, reviews = Question.get_other_by_questions(questions)
+        self.write(render('tag.html', questions=questions, tag=tag, options=options, reviews=reviews))
+

@@ -20,7 +20,6 @@ class Data(Object):
     @property
     def createdAt(self):
         return self.created_at.replace(tzinfo=None) + timedelta(hours=8)
-        
 
     @property
     def author(self):
@@ -48,14 +47,10 @@ class Question(Data):
 	options.sort(key=lambda x:len(x.get('vote_users') or []), reverse=True)
         return options
 
-
     @classmethod
-    def hotest(self, page=0):
-        query = Query(Question)
-        query.descending('updatedAt')
-        questions = query.skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
-
+    def get_other_by_questions(cls, questions):
         #TODO sql inject
+        questions = [i for i in questions if i]
         result = Query.do_cloud_query('select include img, * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
@@ -71,12 +66,26 @@ class Question(Data):
         for r in  result:
             if r.option.id not in [i for i in reviews.keys()]:
                 reviews[r.option.id] = r
+        return options, reviews
+
+    @classmethod
+    def hotest(cls, page=0):
+        query = Query(Question)
+        query.descending('updatedAt')
+        questions = query.skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
+
+        options, reviews =  cls.get_other_by_questions(questions)
 
         return questions, options, reviews
 
     @property
     def new_option(self):
         return self.options and self.options[0] or None
+
+    @property
+    def tags(self):
+        tags = Tag2Question.gets_by_question(self)
+        return ' '.join([t.get('tag').get('title') for t in tags])
 
     
 class Option(Data):
@@ -177,7 +186,69 @@ class People(Data):
         self.set('nickname', name)
         self.save()
 
+    def is_admin(self):
+        if self.get('username') == 'admin' and self.get('password') == 'lifeisgood':
+            return True
+        return False
+
+class Tag2Question(Data):
+    #question, tag
+    @classmethod
+    def update(cls, question, tags):
+        tags = list(set([t for t in tags.split() if t]))
+        query = Query(Tag2Question)
+        for tq in query.equal_to('question', question).find():
+			tq.destroy()
+        for tag_name in tags:
+            tag = Tag.get_by_title(tag_name)
+            if not tag:
+                tag = Tag.add(tag_name)
+            t = Tag2Question(tag=tag, question=question) 
+            t.save()
+
+    @classmethod
+    def gets_by_tag(cls, tag_name, page=0):
+        tag = Tag.get_by_title(tag_name.strip())
+        if not tag:
+            return []
+
+        query = Query(cls)
+        r = query.equal_to('tag', tag).include('question').descending('createdAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
+        return [i for i in r if i]
+
+    @classmethod
+    def gets_by_question(cls, question):
+        query = Query(cls)
+        r = query.equal_to('question', question).include('tag').find()
+        return r
+
+class Tag(Data):
+    @classmethod
+    def add(cls, title):
+        title = title.strip()
+        query = Query(cls)
+        tag = query.equal_to('title', title).find()
+        if not tag:
+            tag = Tag(title=title)
+            tag.save()
+        tag = query.equal_to('title', title).find()
+        return tag and tag[0] or None
+
+    @classmethod
+    def takes(cls, limit=20):
+        query = Query(cls)
+        tags = query.limit(limit).ascending('sort').find()
+        return tags
+
+    @classmethod
+    def get_by_title(cls, title):
+        title = title.strip()
+        query = Query(cls)
+        tag = query.equal_to('title', title).find()
+        return tag and tag[0] or None
+        
+
+
 if __name__ == '__main__':
     #Question.add('haha', 'hehe')
     pass
-

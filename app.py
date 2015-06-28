@@ -27,23 +27,20 @@ urls = [
     (r"/question/(.*?)/", QuestionHandler),
     #TODO no more question id
     (r"/question/(.*?)/option/add", AddOptionHandler),
+    (r"/question/(.*?)/tag/update", UpdateQuestionTagHandler),
     (r"/option/(.*?)/update", UpdateOptionHandler),
     (r"/option/(.*?)/up", UpOptionHandler),
     (r"/review/add", AddReviewHandler),
+    (r"/tag/(.*?)/", TagHandler),
     (r"/", MainHandler),
 ]
 application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_GOOD_BY_USING_TIAOYI")
 
 
 if __name__ == "__main__":
-    port = 8888
-    try:
-        import config
-        leancloud.init(config.leancloud_id, master_key=config.leancloud_key)
-        port = config.port
-    except:
-        pass
-        
-    application.listen(port)
-    tornado.ioloop.IOLoop.instance().start()
+	import config
+	leancloud.init(config.leancloud_id, master_key=config.leancloud_key)
+	port = config.port
+	application.listen(port)
+	tornado.ioloop.IOLoop.instance().start()
 
