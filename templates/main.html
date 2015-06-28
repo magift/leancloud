@@ -2,7 +2,7 @@
 
 <%def name="title()">
 <div style="background-color:#000">
-<p style="padding-bottom:12px;padding-top:12px;">
+<p style="padding-bottom:16px;padding-top:16px;">
 <a href="/"
 style="
 color:#FFF;
@@ -13,7 +13,7 @@ margin-left:15px;
 <a href="/question/add" class="pull-right btn btn-success" style="
 margin-right:18px;margin-top:-2px;
 "
->我要求推荐</a>
+>我要「求推荐」</a>
 </p>
 </div>
 
@@ -32,7 +32,7 @@ margin-right:18px;margin-top:-2px;
         </a>
         <ul class="dropdown-menu">
             %for t in tags[3:]:
-            <li 
+            <li style="padding-top:5px; padding-bottom:5px;" 
                 %if tag == t.get('title'):
                     class="active"
                 %endif
@@ -50,13 +50,13 @@ margin-right:18px;margin-top:-2px;
 
 <%include file="widget_questions.html" args="questions=questions"/>
 
-%if len(questions) == PAGE_SIZE:
+##%if len(questions) == PAGE_SIZE:
 <nav>
   <ul class="pager">
     <li><a href="/?p=${max(0,p-1)}">上一页</a></li>
     <li><a href="/?p=${p+1}">下一页</a></li>
   </ul>
 </nav>
-%endif
+##%endif
 
 </%def>
