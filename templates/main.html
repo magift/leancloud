@@ -1,25 +1,52 @@
 <%inherit file="base.html"/>
 
-<%def name="content()">
-
-<div class="clearfix form-group">
-        <a href="/question/add" class="pull-right"><button type="button" class="btn btn-success">我要求推荐</button> 
+<%def name="title()">
+<div style="background-color:#000">
+<p style="padding-bottom:12px;padding-top:12px;">
+<a href="/"
+style="
+color:#FFF;
+font-size:20px;
+margin-left:15px;
+"
+><strong>人民推荐</strong></a>
+<a href="/question/add" class="pull-right btn btn-success" style="
+margin-right:18px;margin-top:-2px;
+"
+>我要求推荐</a>
+</p>
 </div>
 
-<a href="/"
-	%if tag == '':
-		style="background-color:#CCC"
-	%endif
->全部
-</a>
+<ul class="nav nav-tabs">
+    %for t in tags[:3]:
+    <li role="presentation"
+        %if tag == t.get('title'):
+            class="active"
+        %endif
+    ><a href="/?tag=${t.get('title')}">${t.get('title')}</a></li>
+    %endfor
 
-%for t in tags:
-    <a href="/?tag=${t.get('title')}"
-	%if tag == t.get('title'):
-		style="background-color:#CCC"
-	%endif
-    >${t.get('title')}</a>
-%endfor
+      <li role="presentation" class="dropdown pull-right">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+          更多分类<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            %for t in tags[3:]:
+            <li 
+                %if tag == t.get('title'):
+                    class="active"
+                %endif
+            ><a href="/?tag=${t.get('title')}">${t.get('title')}</a></li>
+            %endfor
+        </ul>
+      </li>
+</ul>
+
+</%def>
+
+<%def name="content()">
+
+
 
 <%include file="widget_questions.html" args="questions=questions"/>
 

@@ -1,6 +1,6 @@
 
 <div>
-    %for question in questions:
+    %for question in [i for i in questions if i]:
         <div>
                 <a  href="/question/${question.id}/">
                 <h5>

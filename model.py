@@ -50,6 +50,7 @@ class Question(Data):
     @classmethod
     def get_other_by_questions(cls, questions):
         #TODO sql inject
+        questions = [i for i in questions if i]
         result = Query.do_cloud_query('select include img, * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
@@ -213,7 +214,7 @@ class Tag2Question(Data):
 
         query = Query(cls)
         r = query.equal_to('tag', tag).include('question').descending('createdAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
-        return r
+        return [i for i in r if i]
 
     @classmethod
     def gets_by_question(cls, question):
@@ -234,9 +235,9 @@ class Tag(Data):
         return tag and tag[0] or None
 
     @classmethod
-    def takes(cls, limit=10):
+    def takes(cls, limit=20):
         query = Query(cls)
-        tags = query.descending('updateAt').limit(limit).find()
+        tags = query.limit(limit).ascending('sort').find()
         return tags
 
     @classmethod

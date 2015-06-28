@@ -71,10 +71,17 @@ class MainHandler(BaseHandler):
     def get(self):
         p = int(self.get_argument('p',0))
         tag = self.get_argument('tag', '').strip()
-        tags = Tag.takes(10)
+        tags = Tag.takes()
         if tag == '':
             questions, options, reviews = Question.hotest(p)
         else:
+            if tag not in [i.get('title') for i in tags[:3]]:
+                temp = tags[2]
+                for j, t in enumerate(tags):
+                    if t.get('title') == tag:
+                        tags[2] = t
+                        tags[j] = temp
+                        
             tag2question = Tag2Question.gets_by_tag(tag, p)
             questions = [i.get('question') for i in tag2question] 
             options, reviews = Question.get_other_by_questions(questions)
@@ -177,6 +184,7 @@ class TagHandler(BaseHandler):
         tag = tag.strip()
         tag2question = Tag2Question.gets_by_tag(tag)
         questions = [i.get('question') for i in tag2question] 
+        questions = [i for i in questions if i]
         options, reviews = Question.get_other_by_questions(questions)
         self.write(render('tag.html', questions=questions, tag=tag, options=options, reviews=reviews))
 
