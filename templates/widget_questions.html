@@ -1,6 +1,7 @@
 
 <div>
     %for question in [i for i in questions if i]:
+        <ul class="media-list">
         <div>
                 <a  href="/question/${question.id}/">
                 <h5>
@@ -15,37 +16,44 @@
                 %>
 
                 %if option:
+                <p>
+                   <li class="media">
+			          %if option.get('img'):
+                          <a class="pull-right" href="#">
+                             <img class="media-object " src="${option.get('img').get_thumbnail_url(width='100', height='100', scale_to_fit=False)}"></img>
+                          </a>
+			          %endif
+                      <div class="media-body">
+                        <h6 class="media-heading">${option.title}
+                        </h6>
+
                         %if option.get('nickname'):
-                        <p style="margin-top:-3px; margin-bottom:-3px;">
+                        <p style="margin-bottom:4px;">
                         <span><small>${option.get('nickname') or ''}
                         ${mtimeformat(option.createdAt, True)}
                         </small></span></p>
                         %endif
 
-                <p><h6>${option.title}
-                      <% review = reviews.get(option.id, '') %>
-                      % if review:
-			<% 
-				r_title = review.title
-				length = 100
-				if len(r_title) > length:
-					r_title = r_title[:length] + ' ...'
-			%>
-                        <small>${r_title}</small>
-                      %endif
-                </h6></p>
 
-
-			##%if option.get('img'):
-			##    <p style="margin-top:10px;">
-			##    <img src="${option.get('img').get_thumbnail_url(width='160', height='160')}"></img>
-			##    </p>
-			##%endif
-                %endif
-                %if len(os) > 1:
-                        <p style="margin-top:-3px;"><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 </a></small></p>
+                        <% review = reviews.get(option.id, '') %>
+                        % if review:
+                            <% 
+                                r_title = review.title
+                                length = 100
+                                if len(r_title) > length:
+                                    r_title = r_title[:length] + ' ...'
+                            %>
+                            <p style="margin-bottom:4px;"><small>${r_title}</small></p>
+                        %endif
+                        %if len(os) > 1:
+                                <p><small><a href="/question/${question.id}/">更多${len(os)-1}个推荐 </a></small></p>
+                        %endif
+                      </div>
+                   </li>
+                </p>
                 %endif
                 <hr>
         </div>
+        </ul>
     %endfor
 </div>
