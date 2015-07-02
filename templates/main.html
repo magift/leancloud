@@ -18,7 +18,13 @@ margin-right:18px;margin-top:-2px;
 </div>
 
 <ul class="nav nav-tabs">
-    %for t in tags[:3]:
+    <% 
+    TAG_POS = 3
+    if not is_mobile:
+        TAG_POS = 15
+    %>
+
+    %for t in tags[:TAG_POS]:
     <li role="presentation"
         %if tag == t.get('title'):
             class="active"
@@ -26,12 +32,13 @@ margin-right:18px;margin-top:-2px;
     ><a href="/?tag=${t.get('title')}">${t.get('title')}</a></li>
     %endfor
 
+    %if len(tags) > TAG_POS:
       <li role="presentation" class="dropdown pull-right">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
           更多<span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-            %for t in tags[3:]:
+            %for t in tags[TAG_POS:]:
             <li style="padding-top:5px; padding-bottom:5px;" 
                 %if tag == t.get('title'):
                     class="active"
@@ -40,6 +47,7 @@ margin-right:18px;margin-top:-2px;
             %endfor
         </ul>
       </li>
+      %endif
 </ul>
 
 </%def>

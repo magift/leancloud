@@ -9,6 +9,7 @@ import sys
 import re
 import traceback
 from lib.utils import save_file, pager
+import lib.utils as utils
 from model import People as User
 
 mylookup = TemplateLookup(
@@ -87,7 +88,8 @@ class MainHandler(BaseHandler):
             questions = [i.get('question') for i in tag2question] 
             options, reviews = Question.get_other_by_questions(questions)
         prev, next = pager(self.request.uri, p)
-        self.write(render('main.html', questions=questions, options=options, reviews=reviews, tags=tags, tag=tag, prev=prev, next=next))
+        is_mobile = utils.is_mobile(self.request)
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews, tags=tags, tag=tag, prev=prev, next=next, is_mobile=is_mobile))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):
