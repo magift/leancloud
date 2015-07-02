@@ -51,7 +51,7 @@ class Question(Data):
     def get_other_by_questions(cls, questions):
         #TODO sql inject
         questions = [i for i in questions if i]
-        result = Query.do_cloud_query('select include img, * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
+        result = Query.do_cloud_query('select include img, * from Option where question in (%s) order by updatedAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
         for r in result:
@@ -141,10 +141,10 @@ class Option(Data):
             vote_users.remove(user.id)
         else:
             vote_users.append(user.id)
+            self.question.set('updatedAt', datetime.now())
+            self.question.save()
         self.set('vote_users', vote_users)
         self.save()
-        self.question.set('updatedAt', datetime.now())
-        self.question.save()
         return 
          
         
@@ -218,6 +218,8 @@ class Tag2Question(Data):
 
         query = Query(cls)
         r = query.equal_to('tag', tag).include('question').descending('question.updatedAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
+        #r = Query.do_cloud_query('select include question, * from Tag2Question where tag = pointer("Tag", "%s") order by question.updatedAt desc limit %s, %s' % (tag.id, page*PAGE_SIZE, PAGE_SIZE))
+        #r = r.results
         return [i for i in r if i]
 
     @classmethod
