@@ -43,8 +43,8 @@ class Question(Data):
     def options(self):
         query = Query(Option) 
         options = query.equal_to('question', self).include('img')
-	options = options.find()
-	options.sort(key=lambda x:len(x.get('vote_users') or []), reverse=True)
+        options = options.find()
+        options.sort(key=lambda x:len(x.get('vote_users') or []), reverse=True)
         return options
 
     @classmethod
@@ -143,6 +143,8 @@ class Option(Data):
             vote_users.append(user.id)
         self.set('vote_users', vote_users)
         self.save()
+        self.question.set('updatedAt', datetime.now())
+        self.question.save()
         return 
          
         
@@ -153,6 +155,8 @@ class Review(Data):
     def add(cls, title, author, option):
         review = Review(title=title, author=author, option=option)
         review.save()
+        option.question.set('updatedAt', datetime.now())
+        option.question.save()
         return review
 
     def update(self, title):
