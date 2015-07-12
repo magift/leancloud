@@ -62,10 +62,10 @@
                 %endif
 
                 %for review in option.reviews:
-                    <% author = review.get('author') %>
+                    <% reviewer = review.get_name() %>
                     <h5 id="${review.id}"><small>${review.title}
-                        %if author and author.get('nickname'):
-                          - ${author.get('nickname')} 
+                        %if reviewer:
+                          - ${reviewer}
                         %endif
                         </small>
                     </h5>
