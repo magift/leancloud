@@ -152,8 +152,8 @@ class Option(Data):
 class Review(Data):
     #title; author; kind; option
     @classmethod
-    def add(cls, title, author, option):
-        review = Review(title=title, author=author, option=option)
+    def add(cls, title, author, option, nickname=''):
+        review = Review(title=title, author=author, option=option, nickname=nickname)
         review.save()
         option.question.set('updatedAt', datetime.now())
         option.question.save()
@@ -167,6 +167,15 @@ class Review(Data):
     @property
     def option(self):
         return self.get('option')
+
+    def get_name(self):
+        name = self.get('nickname') or ''
+        if not name:
+            author = self.get('author')
+            if author and author.get('nickname'):
+                name = author.get('nickname')
+        return name
+            
 
 class People(Data):
     def sign_up(self):
