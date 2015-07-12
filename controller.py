@@ -170,11 +170,12 @@ class AddReviewHandler(BaseHandler):
         self.redirect('/question/%s/#%s' % (option.question.id,review.id))
 
 class UpOptionHandler(BaseHandler):        
-    def get(self, option_id):
+    def post(self, option_id):
         user = self.get_current_user()
         option = Option.take(option_id)
         option.up(user)
-        self.redirect('/question/%s/#%s' % (option.question.id, option.id))
+        self.write(str(len(option.get('vote_users'))))
+        #self.redirect('/question/%s/#%s' % (option.question.id, option.id))
 
 class UpdateQuestionTagHandler(BaseHandler):
     def post(self, question_id):
