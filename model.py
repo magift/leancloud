@@ -226,9 +226,10 @@ class Tag2Question(Data):
             return []
 
         query = Query(cls)
-        r = query.equal_to('tag', tag).include('question').descending('question.updatedAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
+        #r = query.equal_to('tag', tag).include('question').descending('question.createdAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
         #r = Query.do_cloud_query('select include question, * from Tag2Question where tag = pointer("Tag", "%s") order by question.updatedAt desc limit %s, %s' % (tag.id, page*PAGE_SIZE, PAGE_SIZE))
         #r = r.results
+        r = query.equal_to('tag', tag).include('question').descending('createdAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
         return [i for i in r if i]
 
     @classmethod
