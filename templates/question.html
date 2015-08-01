@@ -63,7 +63,7 @@
 
                 %for review in option.reviews:
                     <% reviewer = review.get_name() %>
-                    <h5 id="${review.id}"><small>${review.title}
+                    <h5 id="${review.id}"><small style="color:#333;">${review.title}
                         %if reviewer:
                           - ${reviewer}
                         %endif
