@@ -85,7 +85,7 @@ class Question(Data):
     @property
     def tags(self):
         tags = Tag2Question.gets_by_question(self)
-        return ' '.join([t.get('tag').get('title') for t in tags])
+        return ' '.join([t.get('tag') and t.get('tag').get('title') or '' for t in tags])
 
     
 class Option(Data):
