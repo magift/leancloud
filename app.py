@@ -24,6 +24,7 @@ logging.basicConfig()
 urls = [
     (r"/admin", AdminHandler),
     (r"/question/add", AddQuestionHandler),
+    (r"/question/delete", DeleteQuestionHandler),
     (r"/question/(.*?)/", QuestionHandler),
     #TODO no more question id
     (r"/question/(.*?)/option/add", AddOptionHandler),

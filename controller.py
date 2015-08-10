@@ -102,6 +102,8 @@ class AddQuestionHandler(BaseHandler):
         question = Question.add(title, self.get_current_user())
         self.redirect('/')
 
+class DeleteQuestionHandler(BaseHandler):
+
 class QuestionHandler(BaseHandler):
     def get(self, id):
         question = Question.take(id)
