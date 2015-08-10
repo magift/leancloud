@@ -2,6 +2,9 @@
 <div class="jumbotron" style="background-color:#333">
     <div class="container" style="padding-left:0px;">
             <h4 style="color:#fff">${question.title}</h4>
+            %if question.can_delete(user):
+                <a href="javascript:if(confirm('确认要删除?'))location='/question/${question.id}/delete'">删除</a>
+            %endif
             %if user.is_admin():
             <p>
                     <form method="POST" action="/question/${question.id}/tag/update">

@@ -26,9 +26,12 @@ class Data(Object):
         return self.get('author')
 
     def can_edit(self, user):
-	admin = People().login('admin', 'lifeisgood')
-	author_id = self.author and self.author.id or None
-	return author_id == user.id or user.id == admin.id
+	    admin = People().login('admin', 'lifeisgood')
+	    author_id = self.author and self.author.id or None
+	    return author_id == user.id or user.id == admin.id
+    
+    def can_delete(self, user):
+        return self.can_edit(user)
 
 class Question(Data):
     #title; author; 
@@ -37,6 +40,12 @@ class Question(Data):
         question = Question(title=title, author=author)
         question.save()
         return question
+
+    @classmethod
+    def delete(cls, qid):
+        query = Query(Question)
+        query.get(qid).destroy()
+        return
 
 
     @property
