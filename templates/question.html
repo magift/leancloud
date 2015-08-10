@@ -1,7 +1,7 @@
 <%inherit file="base.html"/>
 
 <%def name="header()">
-<title>${question.title}</title>
+<title>${question.title} - 买买提</title>
 </%def>
 
 <%def name="title()">
@@ -9,13 +9,6 @@
 </%def>
 
 <%def name="content()">
-        <!--script>
-        $(".option-up").click(function(){
-            alert(1);
-            $.get($(this).attr(url));
-            return false;
-        });
-        </script-->
         %for i, option in enumerate(question.options):
                 <h5 id="${option.id}">
                     %if option.link:
@@ -25,10 +18,13 @@
                     <!--small>${i+1}.</small--> ${option.title} 
 
                     %if option.link:
-                        »</a>
+                        </a><img width="10px" src="${'/'.join(option.link.split('/')[:3])}/favicon.ico" onerror="this.src='http://ac-vkozxtew.clouddn.com/61e8b1874cf12665.png'"></img>
                     %endif
 
-                    <a class="option-up" href="/option/${option.id}/up" style="padding-right:5px; padding-left:10px; padding-top:10px; padding-bottom:10px;" >
+                    <script>
+                        $
+                    </script>
+                    <a href="#" link="/option/${option.id}/up" rel="${option.id}-votenum" rel-hand="${option.id}-votehand" class="option-up" style="padding-right:5px; padding-left:10px; padding-top:10px; padding-bottom:10px;" >
                     <span class="glyphicon glyphicon-hand-up pull-right"  
                     style="font-size:18px; padding-right:5px;
                     %if user.id in (option.get('vote_users') or []):
@@ -37,8 +33,8 @@
                         color:#777;
                     %endif
                     " 
-                    aria-hidden="true"></span>
-                    <span class="pull-right" style="color:#777;padding-right:4px;">${len(option.get('vote_users') or []) or ''}</span>
+                    aria-hidden="true" id="${option.id}-votehand"></span>
+                    <span class="pull-right" id="${option.id}-votenum" style="color:#777;padding-right:4px;">${len(option.get('vote_users') or []) or ''}</span>
                     </a>
                 </h5>
 
@@ -58,16 +54,18 @@
 
 
                 %if option.get('img'):
+                    <div style="overflow:hidden;">
                     <p style="margin-top:10px;"><a href="${option.get('img').url}">
-                    <img src="${option.get('img').get_thumbnail_url(width='290', height='290')}"></img>
+                    <img src="${option.get('img').get_thumbnail_url(width='300', height='300')}"></img>
                     </a></p>
+                    </div>
                 %endif
 
                 %for review in option.reviews:
-                    <% author = review.get('author') %>
-                    <h5 id="${review.id}"><small>${review.title}
-                        %if author and author.get('nickname'):
-                          - ${author.get('nickname')} 
+                    <% reviewer = review.get_name() %>
+                    <h5 id="${review.id}"><small style="color:#333;">${review.title}
+                        %if reviewer:
+                          - ${reviewer}
                         %endif
                         </small>
                     </h5>
@@ -104,10 +102,28 @@
                 <hr>
         %endfor
 
+        <script>
+        $(".option-up").click(function(){
+            var a  = $(this);
+            var link = a.attr('link');
+            $.ajax({
+                url:link,
+                method:'POST',
+            }).done(function(data){
+                console.log(data);
+                console.log($('#'+a.attr('rel')));
+                $("#" + a.attr('rel')).text(data);
+                var hand = $("#"+a.attr('rel-hand'));
+                hand.css('color', '#FA5A1C');
+            }); 
+            return false;    
+        });
+        </script>
+
         <a href="/question/${question.id}/option/add"><button type="button" class="btn btn-success">我要推荐</button> 
         </a>
 
-	<p style="padding-top:150px;text-align:center">
-	<img src="http://ac-vz3hsizf.clouddn.com/V1Xhrnxok8GGa5YS2xiPKztGhDg2nmguP1ri6vog.jpg" width="300"></img>
+	<p style="padding-top:100px;text-align:center">
+	<img src="http://ac-vkozxtew.clouddn.com/85bd2a39df49f2fb.jpg" width="300px"></img>
 	</p>
 </%def>

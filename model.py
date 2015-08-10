@@ -43,15 +43,15 @@ class Question(Data):
     def options(self):
         query = Query(Option) 
         options = query.equal_to('question', self).include('img')
-	options = options.find()
-	options.sort(key=lambda x:len(x.get('vote_users') or []), reverse=True)
+        options = options.find()
+        options.sort(key=lambda x:len(x.get('vote_users') or []), reverse=True)
         return options
 
     @classmethod
     def get_other_by_questions(cls, questions):
         #TODO sql inject
         questions = [i for i in questions if i]
-        result = Query.do_cloud_query('select include img, * from Option where question in (%s) order by createdAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
+        result = Query.do_cloud_query('select include img, * from Option where question in (%s) order by updatedAt desc limit 1000' % ','.join(["pointer('Question', '%s')" % i.id for i in questions]))
         result = result.results
         options = {}
         for r in result:
@@ -85,7 +85,7 @@ class Question(Data):
     @property
     def tags(self):
         tags = Tag2Question.gets_by_question(self)
-        return ' '.join([t.get('tag').get('title') for t in tags])
+        return ' '.join([t.get('tag') and t.get('tag').get('title') or '' for t in tags])
 
     
 class Option(Data):
@@ -141,6 +141,8 @@ class Option(Data):
             vote_users.remove(user.id)
         else:
             vote_users.append(user.id)
+            self.question.set('updatedAt', datetime.now())
+            self.question.save()
         self.set('vote_users', vote_users)
         self.save()
         return 
@@ -150,9 +152,11 @@ class Option(Data):
 class Review(Data):
     #title; author; kind; option
     @classmethod
-    def add(cls, title, author, option):
-        review = Review(title=title, author=author, option=option)
+    def add(cls, title, author, option, nickname=''):
+        review = Review(title=title, author=author, option=option, nickname=nickname)
         review.save()
+        option.question.set('updatedAt', datetime.now())
+        option.question.save()
         return review
 
     def update(self, title):
@@ -163,6 +167,15 @@ class Review(Data):
     @property
     def option(self):
         return self.get('option')
+
+    def get_name(self):
+        name = self.get('nickname') or ''
+        if not name:
+            author = self.get('author')
+            if author and author.get('nickname'):
+                name = author.get('nickname')
+        return name
+            
 
 class People(Data):
     def sign_up(self):
@@ -213,7 +226,10 @@ class Tag2Question(Data):
             return []
 
         query = Query(cls)
-        r = query.equal_to('tag', tag).include('question').descending('question.updatedAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
+        #r = query.equal_to('tag', tag).include('question').descending('question.createdAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
+        #r = Query.do_cloud_query('select include question, * from Tag2Question where tag = pointer("Tag", "%s") order by question.updatedAt desc limit %s, %s' % (tag.id, page*PAGE_SIZE, PAGE_SIZE))
+        #r = r.results
+        r = query.equal_to('tag', tag).include('question').descending('createdAt').skip(page*PAGE_SIZE).limit(PAGE_SIZE).find()
         return [i for i in r if i]
 
     @classmethod

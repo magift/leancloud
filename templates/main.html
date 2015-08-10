@@ -9,11 +9,11 @@ color:#FFF;
 font-size:20px;
 margin-left:15px;
 "
-><strong>人民推荐</strong></a>
+><strong>买买提</strong></a>
 <a href="/question/add" class="pull-right btn btn-success" style="
 margin-right:18px;margin-top:-2px;
 "
->我要「求推荐」</a>
+><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 提问</a>
 </p>
 </div>
 
@@ -67,4 +67,11 @@ margin-right:18px;margin-top:-2px;
 ##%if len(questions) == PAGE_SIZE:
 ##%endif
 
+</%def>
+
+
+<%def name="footer()">
+%if not is_mobile:
+    <footer><a class="pull-right" style="margin-right:10px; margin-top:30px;" href="http://www.miitbeian.gov.cn/"><small>京ICP备06061688号-2</small></a></footer>
+%endif
 </%def>
