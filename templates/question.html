@@ -21,9 +21,7 @@
                         </a><img width="10px" src="${'/'.join(option.link.split('/')[:3])}/favicon.ico" onerror="this.src='http://ac-vkozxtew.clouddn.com/61e8b1874cf12665.png'"></img>
                     %endif
 
-                    <script>
-                        $
-                    </script>
+
                     <a href="#" link="/option/${option.id}/up" rel="${option.id}-votenum" rel-hand="${option.id}-votehand" class="option-up" style="padding-right:5px; padding-left:10px; padding-top:10px; padding-bottom:10px;" >
                     <span class="glyphicon glyphicon-hand-up pull-right"  
                     style="font-size:18px; padding-right:5px;
@@ -50,6 +48,10 @@
                 %if option.can_edit(user): 
                 <a href="/option/${option.id}/update">编辑</a>
                 %endif
+
+                %if option.can_delete(user):
+                    <a href="javascript:if(confirm('确认要删除?'))location='/option/${option.id}/delete'"> 删除</a>
+                %endif
                 </p>
 
 
@@ -65,8 +67,13 @@
                     <% reviewer = review.get_name() %>
                     <h5 id="${review.id}"><small style="color:#333;">${review.title}
                         %if reviewer:
-                          - ${reviewer}
+                          <span style="color:#666">- ${reviewer}</span>
                         %endif
+
+                        %if review.can_delete(user):
+                            <a href="javascript:if(confirm('确认要删除?'))location='/review/${review.id}/delete'"> 删除</a>
+                        %endif
+
                         </small>
                     </h5>
                 %endfor

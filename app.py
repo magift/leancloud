@@ -31,7 +31,9 @@ urls = [
     (r"/question/(.*?)/tag/update", UpdateQuestionTagHandler),
     (r"/option/(.*?)/update", UpdateOptionHandler),
     (r"/option/(.*?)/up", UpOptionHandler),
+    (r"/option/(.*?)/delete", DeleteOptionHandler),
     (r"/review/add", AddReviewHandler),
+    (r"/review/(.*?)/delete", DeleteReviewHandler),
     (r"/tag/(.*?)/", TagHandler),
     (r"/", MainHandler),
 ]

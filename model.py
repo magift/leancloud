@@ -33,6 +33,12 @@ class Data(Object):
     def can_delete(self, user):
         return self.can_edit(user)
 
+    @classmethod
+    def delete(cls, id):
+        query = Query(cls)
+        query.get(id).destroy()
+        return
+
 class Question(Data):
     #title; author; 
     @classmethod
@@ -41,11 +47,6 @@ class Question(Data):
         question.save()
         return question
 
-    @classmethod
-    def delete(cls, qid):
-        query = Query(Question)
-        query.get(qid).destroy()
-        return
 
 
     @property
