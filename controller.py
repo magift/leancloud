@@ -119,7 +119,7 @@ class DeleteOptionHandler(BaseHandler):
 class DeleteReviewHandler(BaseHandler):
     def get(self, id):
         review = Review.take(id)
-        qid = review.option.question.id
+        qid = review.question.id
         if review and review.can_delete(self.get_current_user()):
             Review.delete(id)
         self.redirect('/question/%s/' % qid)

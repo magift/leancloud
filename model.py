@@ -178,6 +178,10 @@ class Review(Data):
     def option(self):
         return self.get('option')
 
+    @property
+    def question(self):
+        return Option.take(self.option.id).question
+
     def get_name(self):
         name = self.get('nickname') or ''
         if not name:
