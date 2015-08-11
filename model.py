@@ -273,7 +273,7 @@ class Tag(Data):
     @classmethod
     def tops(cls):
         query = Query(cls)
-        return query.less_than('sort', 1000).find()
+        return query.less_than('sort', 1000).ascending('sort').find()
 
     @classmethod
     def get_by_title(cls, title):
