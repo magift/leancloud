@@ -73,7 +73,7 @@ class MainHandler(BaseHandler):
     def get(self):
         p = int(self.get_argument('p',0))
         tag = self.get_argument('tag', '').strip()
-        tags = Tag.takes()
+        tags = Tag.tops()
         if tag == '':
             questions, options, reviews = Question.hotest(p)
         else:
@@ -89,7 +89,11 @@ class MainHandler(BaseHandler):
             options, reviews = Question.get_other_by_questions(questions)
         prev, next = pager(self.request.uri, p)
         is_mobile = utils.is_mobile(self.request)
-        self.write(render('main.html', questions=questions, options=options, reviews=reviews, tags=tags, tag=tag, prev=prev, next=next, is_mobile=is_mobile))
+
+        tag_tree = []
+        if tag == '' and p == 0:
+            tag_tree = Tag.get_tree()
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews, tags=tags, tag=tag, prev=prev, next=next, is_mobile=is_mobile, tag_tree=tag_tree))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):

@@ -271,12 +271,39 @@ class Tag(Data):
         return tags
 
     @classmethod
+    def tops(cls):
+        query = Query(cls)
+        return query.less_than('sort', 1000).find()
+
+    @classmethod
     def get_by_title(cls, title):
         title = title.strip()
         query = Query(cls)
         tag = query.equal_to('title', title).find()
         return tag and tag[0] or None
-        
+
+    @classmethod
+    def get_tree(cls):
+        tops = cls.tops()                 
+        r = []
+        for tag in tops:
+            query = Query(cls)
+            children = query.equal_to('parent', tag).find()
+            r.append([tag, children])
+
+        query = Query(cls) 
+        others = query.equal_to('parent', None).find()
+        others = [i for i in others if i.id not in [j.id for j in tops]]
+        r.append([None, others])
+        for tag in others:
+            tag_name = tag.get('parentTagName')
+            if tag_name:
+                query = Query(cls)
+                parent = query.equal_to('title', tag_name.strip()).find()
+                if parent and parent[0].id in [i.id for i in tops]:
+                    tag.set('parent', parent[0])
+                    tag.save()
+        return r
 
 
 if __name__ == '__main__':

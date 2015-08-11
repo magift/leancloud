@@ -1,8 +1,9 @@
 <%inherit file="base.html"/>
 
-<%def name="content()">
 
-${tag}
+<%def name="content()">
+    <h4>${tag}</h4>
+    <hr>
 
 <%include file="widget_questions.html" args="questions=questions"/>
 
