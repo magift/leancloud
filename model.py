@@ -224,14 +224,19 @@ class Tag2Question(Data):
     def update(cls, question, tags):
         tags = list(set([t for t in tags.split() if t]))
         query = Query(Tag2Question)
-        for tq in query.equal_to('question', question).find():
-			tq.destroy()
+        for tq in query.equal_to('question', question).include('tag').find():
+            tq.get('tag').increment('count', -1)
+            tq.get('tag').save()
+            tq.destroy()
+
         for tag_name in tags:
             tag = Tag.get_by_title(tag_name)
             if not tag:
                 tag = Tag.add(tag_name)
             t = Tag2Question(tag=tag, question=question) 
             t.save()
+            tag.increment('count', 1)
+            tag.save()
 
     @classmethod
     def gets_by_tag(cls, tag_name, page=0):
@@ -288,11 +293,11 @@ class Tag(Data):
         r = []
         for tag in tops:
             query = Query(cls)
-            children = query.equal_to('parent', tag).find()
+            children = query.equal_to('parent', tag).greater_than('count', 0).descending('count').limit(500).find()
             r.append([tag, children])
 
         query = Query(cls) 
-        others = query.equal_to('parent', None).limit(1000).find()
+        others = query.equal_to('parent', None).greater_than('count', 0).descending('count').limit(1000).find()
         others = [i for i in others if i.id not in [j.id for j in tops]]
         r.append([None, others])
         for tag in others:
