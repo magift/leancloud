@@ -8,12 +8,18 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">
-            ${name}
+            %if tag:
+                <a href="/tag/${tag.get('title')}/">
+            %endif
+                ${name}
+            %if tag:
+                </a>
+            %endif
             </h3>
           </div>
           <div class="panel-body">
             %for child in children:
-                <a style="padding-right:8px; padding-bottom:2px;" href="/tag/${child.get('title')}/">${child.get('title')}</a>
+                <a style="padding-right:10px; line-height:25px;" href="/tag/${child.get('title')}/">${child.get('title')}</a>
             %endfor
           </div>
         </div>
