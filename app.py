@@ -36,6 +36,7 @@ urls = [
     (r"/review/(.*?)/delete", DeleteReviewHandler),
     (r"/tag/(.*?)/", TagHandler),
     (r"/", MainHandler),
+    (r"/tags/", TagTreeHandler),
 ]
 application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_GOOD_BY_USING_TIAOYI")
 
