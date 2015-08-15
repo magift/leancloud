@@ -93,7 +93,7 @@ class MainHandler(BaseHandler):
         tag_tree = []
         if tag == '' and p == 0:
             tag_tree = Tag.get_tree()
-        self.write(render('main.html', questions=questions, options=options, reviews=reviews, tags=tags, tag=tag, prev=prev, next=next, is_mobile=is_mobile, tag_tree=tag_tree))
+        self.write(render('main.html', questions=questions, options=options, reviews=reviews, tags=tags, tag=tag, prev=prev, next=next, is_mobile=is_mobile, tag_tree=tag_tree, user=self.get_current_user()))
 
 class AddQuestionHandler(BaseHandler):
     def get(self):

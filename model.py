@@ -292,7 +292,7 @@ class Tag(Data):
             r.append([tag, children])
 
         query = Query(cls) 
-        others = query.equal_to('parent', None).find()
+        others = query.equal_to('parent', None).limit(1000).find()
         others = [i for i in others if i.id not in [j.id for j in tops]]
         r.append([None, others])
         for tag in others:
