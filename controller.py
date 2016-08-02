@@ -31,9 +31,9 @@ class BaseHandler(tornado.web.RequestHandler):
         #from leancloud import User 
         user_id = self.get_secure_cookie('user')
         user = None
-	admin = User().login('admin', 'lifeisgood')
-	if user_id == admin.id:
-	    return admin
+        admin = User().login('admin', 'lifeisgood')
+        if user_id == admin.id:
+            return admin
         if user_id:
             user = User()
             user = user.login(user_id, 'test')
@@ -74,6 +74,9 @@ class MainHandler(BaseHandler):
         else:
                 self.write('hehe')
 
+    def post(self):
+        body = self.request.body.decode('utf-8')
+        self.write(str(body))
 
 """
 
