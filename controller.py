@@ -57,7 +57,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        self.write('hi zoo')
+        self.write(self.get_argument('echostr', ''))
 
 
 """
