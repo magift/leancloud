@@ -23,6 +23,7 @@ logging.basicConfig()
 
 urls = [
     (r"/", MainHandler),
+]
 """
     (r"/admin", AdminHandler),
     (r"/question/add", AddQuestionHandler),
@@ -40,7 +41,6 @@ urls = [
     (r"/", MainHandler),
     (r"/tags/", TagTreeHandler),
 """
-]
 application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_GOOD_BY_USING_TIAOYI")
 
 
@@ -50,4 +50,3 @@ if __name__ == "__main__":
 	port = config.port
 	application.listen(port)
 	tornado.ioloop.IOLoop.instance().start()
-

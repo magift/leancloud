@@ -26,12 +26,6 @@ def render(templatename, **kwargs):
     mytemplate = mylookup.get_template(templatename)
     return mytemplate.render(**kwargs)
 
-class MainHandler(BaseHandler):
-    def get(self):
-        self.write('hi zoo')
-
-
-"""
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         #from leancloud import User 
@@ -56,12 +50,17 @@ class BaseHandler(tornado.web.RequestHandler):
             self.set_secure_cookie('user', user.id)
         return user 
             
-    """
     def write_error(self, status_code, **kwargs):
         ## no print in product env
         #self.write(str(traceback.format_exc()))
 	pass
-    """
+
+class MainHandler(BaseHandler):
+    def get(self):
+        self.write('hi zoo')
+
+
+"""
 
 class AdminHandler(BaseHandler):
     def get(self):
