@@ -57,7 +57,22 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        self.write(self.get_argument('echostr', ''))
+        signature = self.get_argument('signature', '')
+        timestamp = self.get_argument('timestamp', '')
+        nonce = self.get_argument('nonce', '')
+        token = 'lifeisgood'
+        array = [token, timestamp, nonce]
+        array.sort()
+        array = ''.join(array)
+        import hashlib
+        sha1=hashlib.sha1()
+        map(sha1.update,array)
+        hashcode=sha1.hexdigest()
+
+        if hashcode == signature:
+                self.write(self.get_argument('echostr', ''))
+        else:
+                self.write('hehe')
 
 
 """
