@@ -22,6 +22,8 @@ import logging
 logging.basicConfig()
 
 urls = [
+    (r"/", MainHandler),
+"""
     (r"/admin", AdminHandler),
     (r"/question/add", AddQuestionHandler),
     (r"/question/(.*?)/delete", DeleteQuestionHandler),
@@ -37,6 +39,7 @@ urls = [
     (r"/tag/(.*?)/", TagHandler),
     (r"/", MainHandler),
     (r"/tags/", TagTreeHandler),
+"""
 ]
 application = tornado.wsgi.WSGIApplication(urls, cookie_secret="__TODO:LIFE_IS_GOOD_BY_USING_TIAOYI")
 

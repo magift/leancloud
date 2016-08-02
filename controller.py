@@ -26,6 +26,12 @@ def render(templatename, **kwargs):
     mytemplate = mylookup.get_template(templatename)
     return mytemplate.render(**kwargs)
 
+class MainHandler(BaseHandler):
+    def get(self):
+        self.write('hi zoo')
+
+
+"""
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         #from leancloud import User 
@@ -224,3 +230,4 @@ class TagHandler(BaseHandler):
         options, reviews = Question.get_other_by_questions(questions)
         self.write(render('tag.html', questions=questions, tag=tag, options=options, reviews=reviews))
 
+"""
