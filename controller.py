@@ -26,20 +26,14 @@ def render(templatename, **kwargs):
     mytemplate = mylookup.get_template(templatename)
     return mytemplate.render(**kwargs)
 
-class MainHandler(BaseHandler):
-    def get(self):
-        self.write('hi zoo')
-
-
-"""
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         #from leancloud import User 
         user_id = self.get_secure_cookie('user')
         user = None
-	admin = User().login('admin', 'lifeisgood')
-	if user_id == admin.id:
-	    return admin
+        admin = User().login('admin', 'lifeisgood')
+        if user_id == admin.id:
+            return admin
         if user_id:
             user = User()
             user = user.login(user_id, 'test')
@@ -60,6 +54,31 @@ class BaseHandler(tornado.web.RequestHandler):
         ## no print in product env
         #self.write(str(traceback.format_exc()))
 	pass
+
+class MainHandler(BaseHandler):
+    def get(self):
+        signature = self.get_argument('signature', '')
+        timestamp = self.get_argument('timestamp', '')
+        nonce = self.get_argument('nonce', '')
+        token = 'lifeisgood'
+        array = [token, timestamp, nonce]
+        array.sort()
+        array = ''.join(array)
+        import hashlib
+        sha1=hashlib.sha1()
+        map(sha1.update,array)
+        hashcode=sha1.hexdigest()
+
+        if hashcode == signature:
+                self.write(self.get_argument('echostr', ''))
+        else:
+                self.write('hehe')
+
+    def post(self):
+        body = self.request.body.decode('utf-8')
+        self.write(str(body))
+
+"""
 
 class AdminHandler(BaseHandler):
     def get(self):
