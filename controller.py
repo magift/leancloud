@@ -56,12 +56,10 @@ class BaseHandler(tornado.web.RequestHandler):
             self.set_secure_cookie('user', user.id)
         return user 
             
-    """
     def write_error(self, status_code, **kwargs):
         ## no print in product env
         #self.write(str(traceback.format_exc()))
 	pass
-    """
 
 class AdminHandler(BaseHandler):
     def get(self):
